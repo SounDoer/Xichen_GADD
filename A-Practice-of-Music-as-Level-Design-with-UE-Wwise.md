@@ -11,12 +11,20 @@ Audiokinetic Wwise 2019.2.9
 
 ### 设计需求图解
 
+![HandleAttack Function Explanation](media/MusicAsLevelDesign_HandleAttack.jpeg)
 
-![](media/MusicAsLevelDesign_HandleAttack.jpeg)
+首先需要明确具体的设计需求。如上图所示，敌人的攻击行为由带有一个参数的 HandleAttack(WeaponType) 函数控制，WeaponType 决定了所用武器的各类属性，其中与此处设计相关的数值是 Charge Time，即不同武器有着不同的充能时间。HandleAttack 函数执行时首先获取当前的 WeaponType，然后进行 Start Charge，在经过 Charge Time 之后才实施 Actual Attack。需要实现的设计需求是，敌人在使用不同武器时（即 Charge Time 可变的情况下），Actual Attack 实施的时间点都将与音乐中的节拍点保持一致。\
+其实在 Wwise 中通过音乐内的 Cue 或者 Marker 标记信息来触发函数的功能实现并不复杂，原生 API 中的 PostEvent() 函数本身就开放了回调函数（Callback Function）。**只不过，这个案例的设计需求稍微有些不同的地方是，音乐中需要标记的时间点确实是在节拍点上，但实际调用函数的时间点却是在标记的节拍点之前，且调用函数的提前时间量是由游戏中的参数来实时决定的，因此每次实施攻击时都需要进行额外的计算。**
 
-首先需要明确具体的设计需求。如上图所示，
+### 尝试使用 Wwise Trigger 功能
 
-### Wwise Trigger Solution
+![Wwise Trigger Solution](media/MusicAsLevelDesign_WwiseTriggerSolution.jpeg)
+
+既然已经使用了 Wwise，
+
+对 Trigger 功能的两点建议
+1. API 改进
+2. Trigger 功能通用化
 
 ### New Solution
 
@@ -24,6 +32,13 @@ Audiokinetic Wwise 2019.2.9
 
 更大的可能性
 Game Flow 都由音乐来控制
+
+#### Reference
+
+[Wwise SDK - Integration Details - Events](https://www.audiokinetic.com/library/edge/?source=SDK&id=soundengine_events.html)\
+[Wwise SDK - Integration Details - Music Callbacks](https://www.audiokinetic.com/library/edge/?source=SDK&id=soundengine_music_callbacks.html)\
+[Wwise SDK - Integration Details - Triggers](https://www.audiokinetic.com/library/edge/?source=SDK&id=soundengine_triggers.html)
+
 
 希辰\
 2021.3.20
