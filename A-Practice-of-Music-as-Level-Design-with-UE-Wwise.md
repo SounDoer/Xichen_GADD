@@ -11,6 +11,9 @@ Audiokinetic Wwise 2019.2.9
 
 ### 设计需求图解
 
+
+![](media/MusicAsLevelDesign_HandleAttack.jpeg)
+
 首先需要明确具体的设计需求。如上图所示，
 
 ### Wwise Trigger Solution
