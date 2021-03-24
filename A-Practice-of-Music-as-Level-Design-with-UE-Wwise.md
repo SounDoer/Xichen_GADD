@@ -28,7 +28,7 @@ Audiokinetic Wwise 2019.2.9
 
 但是！在 UE 中使用 Blueprint 进行快速验证后发现，通过 PostEvent 的方式触发 Trigger，Trigger 中包含的 Custom Cue 信息并不能被正确读取用来触发回调函数；进一步研究 Wwise SDK 后发现，通过 PostTrigger 的方式直接触发 Trigger 也不可行，此函数并没有开放任何与回调函数相关的接口。
 
-![Wwise SDK PostTrigger](media/AkSoundEngine_PostTrigger.png)
+![Wwise SDK PostTrigger](media/MusicAsLevelDesign_AkSoundEngine_PostTrigger.png)
 
 至此，尝试使用 Wwise Trigger 功能来实现嵌套式的 Custom Cue 触发回调函数的方式验证不可行。
 
