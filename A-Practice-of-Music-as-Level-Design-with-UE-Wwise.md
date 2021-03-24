@@ -34,8 +34,7 @@ Audiokinetic Wwise 2019.2.9
 
 ### 那就自己动手写吧
 
-
-既然现有功能无法实现，那只能自己动手写了。
+既然上述方案无法实现，那就只能跳出现有思路框架，自己动手实现了，需要解决的核心问题就是如何实时地计算出调用 HandleAttack() 函数的时间点。
 
 ### Thought
 
@@ -48,7 +47,8 @@ Game Flow 都由音乐来控制
 
 [Wwise SDK - Integration Details - Events](https://www.audiokinetic.com/library/edge/?source=SDK&id=soundengine_events.html)\
 [Wwise SDK - Integration Details - Music Callbacks](https://www.audiokinetic.com/library/edge/?source=SDK&id=soundengine_music_callbacks.html)\
-[Wwise SDK - Integration Details - Triggers](https://www.audiokinetic.com/library/edge/?source=SDK&id=soundengine_triggers.html)
+[Wwise SDK - Integration Details - Triggers](https://www.audiokinetic.com/library/edge/?source=SDK&id=soundengine_triggers.html)\
+[Alessandro Fama - Playback position of sounds with Wwise + UE4](https://alessandrofama.com/tutorials/wwise-ue4/playback-position/)
 
 
 希辰\
