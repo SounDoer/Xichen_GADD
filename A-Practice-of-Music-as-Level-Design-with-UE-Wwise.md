@@ -14,21 +14,32 @@ Audiokinetic Wwise 2019.2.9
 ![HandleAttack Function Explanation](media/MusicAsLevelDesign_HandleAttack.jpeg)
 
 首先需要明确具体的设计需求。如上图所示，敌人的攻击行为由带有一个参数的 HandleAttack(WeaponType) 函数控制，WeaponType 决定了所用武器的各类属性，其中与此处设计相关的数值是 Charge Time，即不同武器有着不同的充能时间。HandleAttack 函数执行时首先获取当前的 WeaponType，然后进行 Start Charge，在经过 Charge Time 之后才实施 Actual Attack。需要实现的设计需求是，敌人在使用不同武器时（即 Charge Time 可变的情况下），Actual Attack 实施的时间点都将与音乐中的节拍点保持一致。\
-其实在 Wwise 中通过音乐内的 Cue 或者 Marker 标记信息来触发函数的功能实现并不复杂，原生 API 中的 PostEvent() 函数本身就开放了回调函数（Callback Function）。**只不过，这个案例的设计需求稍微有些不同的地方是，音乐中需要标记的时间点确实是在节拍点上，但实际调用函数的时间点却是在标记的节拍点之前，且调用函数的提前时间量是由游戏中的参数来实时决定的，因此每次实施攻击时都需要进行额外的计算。**
+其实在 Wwise 中通过音乐内的标记信息来触发函数的功能实现并不复杂，原生 API 中的 PostEvent() 函数本身就开放了回调函数（Callback Function）。**只不过，这个案例的设计需求稍微有些不同的地方是，音乐中需要标记的时间点确实是在节拍点上，但实际调用函数的时间点却是在标记的节拍点之前，且调用函数的提前时间量是由游戏中的参数来实时决定的，因此每次实施攻击时都需要进行额外的计算。**
 
 ### 尝试使用 Wwise Trigger 功能
 
+如上一节所说，Wwise 本身已有根据音乐标记信息触发回调函数的功能，对于需要提前触发且对其节拍点的设计需求，我首先想到的是利用 Wwise 提供的 Trigger 功能。
+
 ![Wwise Trigger Solution](media/MusicAsLevelDesign_WwiseTriggerSolution.jpeg)
 
-既然已经使用了 Wwise，
+如上图所示，使用 Trigger 功能进行实现的设计思路是：在 Stinger 声音片段（此处可以理解为是开始攻击时的武器 Whoosh 音效）中，调整 Sync Point 用于对齐 Music Track 中节拍点的 Custom Cue 标记信息，并在 Stinger 片段开头添加用于真正触发回调函数的 Custom Cue 标记信息。游戏运行过程中在任意时刻触发 Trigger，受 Trigger 控制的 Stinger 片段都将响应 Music Track 中下一个标记信息点，只要 Stinger 片段开头的标记信息能够被触发，那就验证此方案可行。
 
-对 Trigger 功能的两点建议
-1. API 改进
-2. Trigger 功能通用化
+![Wwise Trigger Solution Test](media/MusicAsLevelDesign_WwiseTriggerSolution_Test.png)
 
-### New Solution
+但是！在 UE 中使用 Blueprint 进行快速验证后发现，通过 PostEvent 的方式触发 Trigger，Trigger 中包含的 Custom Cue 信息并不能被正确读取用来触发回调函数；进一步研究 Wwise SDK 后发现，通过 PostTrigger 的方式直接触发 Trigger 也不可行，此函数并没有开放任何与回调函数相关的接口。
+
+![Wwise SDK PostTrigger](media/AkSoundEngine_PostTrigger.png)
+
+至此，尝试使用 Wwise Trigger 功能来实现嵌套式的 Custom Cue 触发回调函数的方式验证不可行。
+
+### 那就自己动手写吧
+
+
+既然现有功能无法实现，那只能自己动手写了。
 
 ### Thought
+
+有可能需要改进的点
 
 更大的可能性
 Game Flow 都由音乐来控制
