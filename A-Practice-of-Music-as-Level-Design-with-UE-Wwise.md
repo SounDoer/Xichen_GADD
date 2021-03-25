@@ -36,6 +36,12 @@ Audiokinetic Wwise 2019.2.9
 
 既然上述方案无法实现，那就只能跳出现有思路框架，自己动手实现了，需要解决的核心问题就是如何实时地计算出调用 HandleAttack() 函数的时间点。
 
+#### 实时获取音乐播放位置
+
+####
+
+![Music As Level Design - Solution Overview](media/MusicAsLevelDesign_SolutionOverview_S.jpeg)
+
 ### Thought
 
 有可能需要改进的点
@@ -48,6 +54,7 @@ Game Flow 都由音乐来控制
 [Wwise SDK - Integration Details - Events](https://www.audiokinetic.com/library/edge/?source=SDK&id=soundengine_events.html)\
 [Wwise SDK - Integration Details - Music Callbacks](https://www.audiokinetic.com/library/edge/?source=SDK&id=soundengine_music_callbacks.html)\
 [Wwise SDK - Integration Details - Triggers](https://www.audiokinetic.com/library/edge/?source=SDK&id=soundengine_triggers.html)\
+[Wwise SDK - Integration Details - GetSourcePlayPosition](https://www.audiokinetic.com/library/edge/?source=SDK&id=soundengine_query_pos.html)\
 [Alessandro Fama - Playback position of sounds with Wwise + UE4](https://alessandrofama.com/tutorials/wwise-ue4/playback-position/)
 
 
