@@ -48,15 +48,17 @@ Audiokinetic Wwise 2019.2.9
 
 ![Wwise SDK GetSourcePlayPosition](media\MusicAsLevelDesign_AkSoundEngine_GetSourcePlayPosition.png)
 
-`AK::SoundEngine::PostEvent` 能够返回当前播放声音片段的 `AkPlayingID`，将此 ID 传入 `AK::SoundEngine::GetSourcePlayPosition` 即可获得当前的播放位置。  
+配合使用 AkCallbackType 标志 `AK_EnableGetSourcePlayPosition`，`AK::SoundEngine::PostEvent` 返回当前播放声音片段的 `AkPlayingID`，将此 ID 传入 `AK::SoundEngine::GetSourcePlayPosition` 即可获得当前的播放位置。  
 
-首先在 AkGameplayStatics 类中创建一个封装 `AK::SoundEngine::GetSourcePlayPosition` 的函数，便于之后在 C++ 和 Blueprint 中调用。\
+首先在 AkGameplayStatics 类中创建一个封装 `AK::SoundEngine::GetSourcePlayPosition` 的函数，便于之后在 C++ 和 Blueprint 中调用。
+
 `AkGameplayStatics.h`
 ```
 	/* SZ CUSTOM*/
 	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "SZ | Wwise")
 	static int32 GetSourcePlayPosition(int32 PlayingID);
 ```
+
 `AkGameplayStatics.cpp`
 ```
 int32 UAkGameplayStatics::GetSourcePlayPosition(int32 PlayingID)
@@ -76,7 +78,22 @@ int32 UAkGameplayStatics::GetSourcePlayPosition(int32 PlayingID)
 }
 ```
 
+需要注意的是，UE Blueprint 中的 PostEvent() 节点默认隐藏了 `AK_EnableGetSourcePlayPosition` 标志，因此需要做一些额外的修改将其暴露出来。在 AkGameplayTypes 类中的 `enum class EAkCallbackType` 部分添加以下信息。
+
+`AkGameplayTypes.h`
+```
+EnableGetSourcePlayPosition = 20 UMETA(Tooltip = "Enable play position info for AK::SoundEngine::GetSourcePlayPosition()."),
+```
+```
+CHECK_CALLBACK_TYPE_VALUE(EnableGetSourcePlayPosition);
+```
+
+这样一来就能在 PostEvent() 节点中的 Callback Mask 下拉菜单里选择 Enable Get Source Play Position 选项了。
+
+![PostEvent Callback Mask](media\MusicAsLevelDesign_Blueprint_PostEventCallbackMask.png)
+
 #### 获取节拍点位置信息
+
 
 
 #### 计算函数调用时间点
@@ -101,6 +118,7 @@ Game Flow 都由音乐来控制
 [Wwise SDK - Integration Details - Music Callbacks](https://www.audiokinetic.com/library/edge/?source=SDK&id=soundengine_music_callbacks.html)\
 [Wwise SDK - Integration Details - Triggers](https://www.audiokinetic.com/library/edge/?source=SDK&id=soundengine_triggers.html)\
 [Wwise SDK - Integration Details - GetSourcePlayPosition](https://www.audiokinetic.com/library/edge/?source=SDK&id=soundengine_query_pos.html)\
+[Wwise SDK - AkCallbackType](https://www.audiokinetic.com/zh/library/edge/?source=SDK&id=_ak_callback_8h_a948c083ff18dc4c8dfe1d32cb0eb6732.html)
 [Alessandro Fama - Playback position of sounds with Wwise + UE4](https://alessandrofama.com/tutorials/wwise-ue4/playback-position/)
 
 
