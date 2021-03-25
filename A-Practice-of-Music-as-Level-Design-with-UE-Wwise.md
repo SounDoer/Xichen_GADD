@@ -48,7 +48,9 @@ Audiokinetic Wwise 2019.2.9
 
 ![Wwise SDK GetSourcePlayPosition](media\MusicAsLevelDesign_AkSoundEngine_GetSourcePlayPosition.png)
 
-配合使用 AkCallbackType 标志 `AK_EnableGetSourcePlayPosition`，`AK::SoundEngine::PostEvent` 返回当前播放声音片段的 `AkPlayingID`，将此 ID 传入 `AK::SoundEngine::GetSourcePlayPosition` 即可获得当前的播放位置。  
+配合使用 AkCallbackType 标志 `AK_EnableGetSourcePlayPosition`，`AK::SoundEngine::PostEvent` 返回当前播放声音片段的 `AkPlayingID`，将此 ID 传入 `AK::SoundEngine::GetSourcePlayPosition` 即可获得当前的播放位置。
+
+注：有需要的话，可以使用 `AK::MusicEngine::GetPlayingSegmentInfo` 从返回的 `AkSegmentInfo` 中获取更多信息。
 
 首先在 AkGameplayStatics 类中创建一个封装 `AK::SoundEngine::GetSourcePlayPosition` 的函数，便于之后在 C++ 和 Blueprint 中调用。
 
@@ -165,17 +167,83 @@ void AMainLevelManager::SetMusicStateToGetSegmentInfo(const FName StateGroup, co
 	
 	// Get corresponding cue data table...
 	MusicCueDataTable = CueDataTable;
+	
+	// Get initial info...
+	GetHandleEnemyAttackCueInfo();
+}
+```
+
+其中 `GetHandleEnemyAttackCueInfo()` 用于进一步处理 MusicCue Data Table，从中获取节拍点位置和武器充能时间长度的信息。
+
+```
+void AMainLevelManager::GetHandleEnemyAttackCueInfo()
+{
+	if (MusicCueDataTable)
+	{
+		MusicCueRowNameArray = MusicCueDataTable->GetRowNames();
+		FName MusicCueRowName = MusicCueRowNameArray[MusicCueRowNameArrayIndex];
+		FMusicCueStruct* MusicCue = MusicCueDataTable->FindRow<FMusicCueStruct>(MusicCueRowName, TEXT(""), true);
+
+		if (ensure(MusicCue))
+		{
+			CuePosition = FMath::RoundToInt((*MusicCue).CuePosition * 1000); // Convert to (int32) ms
+			WeaponType = (*MusicCue).CueName;
+		}
+	}
+
+	if (WeaponPropertyDataTable)
+	{
+		FWeaponPropertyStruct* WeaponProperty = WeaponPropertyDataTable->FindRow<FWeaponPropertyStruct>(WeaponType, TEXT(""), true);
+		if (ensure(WeaponProperty))
+		{
+			ChargeTimeLength = FMath::RoundToInt((*WeaponProperty).WeaponChargeTime * 1000); // Convert to (int32) ms
+		}
+	}
 }
 ```
 
 #### 计算函数调用时间点
 
+获取了当前播放位置和节拍点位置信息之后，就可以创建 `HandleEnemyAttackCueCallback()` 函数并依据上述两点判断条件来实时计算函数调用时间点了，且在每次判断为真且执行之后，获取下一个节拍点位置继续进行判断。
 
-### UE Blueprint 实现
+```
+void AMainLevelManager::HandleEnemyAttackCueCallback(int32 AkPlayingID)
+{
+	int32 CurrentPosition = UAkGameplayStatics::GetSourcePlayPosition(AkPlayingID);
 
-![Final Solution Overview](media/MusicAsLevelDesign_SolutionOverview_S.jpeg)
+	if (CuePosition - CurrentPosition < ChargeTimeLength && CuePosition > CurrentPosition)
+	{
+		bool bIsCallbackTriggered = true;
+		
+		if (bIsCallbackTriggered)
+		{
+			OnEnemyAttackCue.Broadcast(WeaponType);
+
+			bIsCallbackTriggered = false;
+
+			MusicCueRowNameArrayIndex += 1;
+			if (MusicCueRowNameArrayIndex > MusicCueRowNameArray.Num() - 1)
+			{
+				MusicCueRowNameArrayIndex = 0;
+			}
+
+			GetHandleEnemyAttackCueInfo();
+		}
+	}
+}
+```
+
+其中 `OnEnemyAttackCue.Broadcast(WeaponType)` 通过 Delegate 的方式将当前的 WeaponType 信息发送出去，敌人的 HandleAttack() 函数便会根据当前武器类型做出相应的攻击行为。
+
+### 最终实现
 
 ![Final UE Blueprint Implementation](media/MusicAsLevelDesign_BlueprintImplementation.png)
+
+如上图，在 Blueprint 中简单使用几个节点即可实现最终的设计需求。
+
+下图为整体的实现思路概览。
+
+![Final Solution Overview](media/MusicAsLevelDesign_SolutionOverview_S.jpeg)
 
 ### Thought
 
