@@ -54,7 +54,6 @@ Audiokinetic Wwise 2019.2.9
 
 `AkGameplayStatics.h`
 ```
-	/* SZ CUSTOM*/
 	UFUNCTION(BlueprintCallable, BlueprintCosmetic, Category = "SZ | Wwise")
 	static int32 GetSourcePlayPosition(int32 PlayingID);
 ```
@@ -78,7 +77,7 @@ int32 UAkGameplayStatics::GetSourcePlayPosition(int32 PlayingID)
 }
 ```
 
-需要注意的是，UE Blueprint 中的 PostEvent() 节点默认隐藏了 `AK_EnableGetSourcePlayPosition` 标志，因此需要做一些额外的修改将其暴露出来。在 AkGameplayTypes 类中的 `enum class EAkCallbackType` 部分添加以下信息。
+需要注意的是，UE Blueprint 中的 PostEvent 节点默认隐藏了 `AK_EnableGetSourcePlayPosition` 标志，因此需要做一些额外的修改将其暴露出来。在 AkGameplayTypes 类中的 `enum class EAkCallbackType` 部分添加以下信息。
 
 `AkGameplayTypes.h`
 ```
@@ -88,13 +87,86 @@ EnableGetSourcePlayPosition = 20 UMETA(Tooltip = "Enable play position info for 
 CHECK_CALLBACK_TYPE_VALUE(EnableGetSourcePlayPosition);
 ```
 
-这样一来就能在 PostEvent() 节点中的 Callback Mask 下拉菜单里选择 Enable Get Source Play Position 选项了。
+这样一来就能在 PostEvent 节点中的 Callback Mask 下拉菜单里选择 Enable Get Source Play Position 选项了。
 
 ![PostEvent Callback Mask](media\MusicAsLevelDesign_Blueprint_PostEventCallbackMask.png)
 
 #### 获取节拍点位置信息
 
+首先在 DAW 中对音乐的节拍点进行标记，并将其导出成 .csv 文件。之后创建 `MusicCueStruct.h` 和相对应的 MusicCue Data Table，并将 .csv 文件信息导入其中。
 
+```
+#pragma once
+
+#include "CoreMinimal.h"
+#include "Engine/DataTable.h"
+#include "MusicCueStruct.generated.h"
+
+USTRUCT(BlueprintType)
+struct FMusicCueStruct : public FTableRowBase
+{
+	GENERATED_USTRUCT_BODY()
+
+	// Music cue position in segment (s)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	float CuePosition;
+
+	// Music cue name
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FName CueName;
+};
+```
+
+![MusicCue Data Table](media\MusicAsLevelDesign_MusicCueDataTable.png)
+
+考虑到仍然需要使用 Wwise State 来切换音乐片段，切换的同时需要加载对应片段的 MusicCue Data Table，因此需要创建 `MusicSegmentStruct.h` 和相对应的 MusicSegment Data Table，将 Wwise State 和 MusicCue Data Table 进行统一管理和调用。
+
+```
+#pragma once
+
+#include "CoreMinimal.h"
+#include "Engine/DataTable.h"
+#include "MusicSegmentStruct.generated.h"
+
+USTRUCT(BlueprintType)
+struct FMusicSegmentStruct : public FTableRowBase
+{
+	GENERATED_USTRUCT_BODY()
+
+	// Music state group in Wwise
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FName MusicStateGroup;
+
+	// Music state in Wwise
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FName MusicState;
+
+	// The corresponding MusicCue Datatable
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UDataTable* CueDataTable;
+};
+```
+
+![MusicSegment Data Table](media\MusicAsLevelDesign_MusicSegmentDataTable.png)
+
+最后，创建 `SetMusicStateToGetSegmentInfo()` 函数用于在 Blueprint 中配合 GetDataTableRow 节点来调取上述数据。
+
+```
+	UFUNCTION(BlueprintCallable)
+	void SetMusicStateToGetSegmentInfo(const FName StateGroup, const FName State, class UDataTable* CueDataTable);
+```
+
+```
+void AMainLevelManager::SetMusicStateToGetSegmentInfo(const FName StateGroup, const FName State, UDataTable* CueDataTable)
+{
+	// Set music state...
+	UAkStateValue* StateValue = nullptr;
+	UAkGameplayStatics::SetState(StateValue, StateGroup, State);
+	
+	// Get corresponding cue data table...
+	MusicCueDataTable = CueDataTable;
+}
+```
 
 #### 计算函数调用时间点
 
@@ -118,8 +190,9 @@ Game Flow 都由音乐来控制
 [Wwise SDK - Integration Details - Music Callbacks](https://www.audiokinetic.com/library/edge/?source=SDK&id=soundengine_music_callbacks.html)\
 [Wwise SDK - Integration Details - Triggers](https://www.audiokinetic.com/library/edge/?source=SDK&id=soundengine_triggers.html)\
 [Wwise SDK - Integration Details - GetSourcePlayPosition](https://www.audiokinetic.com/library/edge/?source=SDK&id=soundengine_query_pos.html)\
-[Wwise SDK - AkCallbackType](https://www.audiokinetic.com/zh/library/edge/?source=SDK&id=_ak_callback_8h_a948c083ff18dc4c8dfe1d32cb0eb6732.html)
-[Alessandro Fama - Playback position of sounds with Wwise + UE4](https://alessandrofama.com/tutorials/wwise-ue4/playback-position/)
+[Wwise SDK - AkCallbackType](https://www.audiokinetic.com/zh/library/edge/?source=SDK&id=_ak_callback_8h_a948c083ff18dc4c8dfe1d32cb0eb6732.html)\
+[Alessandro Fama - Playback position of sounds with Wwise + UE4](https://alessandrofama.com/tutorials/wwise-ue4/playback-position/)\
+[UE API - Get Data Table Row](https://docs.unrealengine.com/en-US/BlueprintAPI/Utilities/GetDataTableRow/index.html)
 
 
 希辰\
