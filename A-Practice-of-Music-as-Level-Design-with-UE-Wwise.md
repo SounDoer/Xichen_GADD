@@ -36,7 +36,7 @@ Audiokinetic Wwise 2019.2.9
 
 ![Position On Track](media/MusicAsLevelDesign_PositionOnTrack.jpeg)
 
-既然上述方案无法实现，那就只能跳出现有思路框架，自己动手实现了，需要解决的核心问题就是如何实时地计算出调用 HandleAttack() 函数的时间点。而所谓的时间点对应到 Music Track 上其实就是播放位置（Play Position），因此函数调用时机的判断条件转化为算术表达式就是：\
+既然上述方案无法实现，那就只能跳出现有思路框架，自己动手实现了，需要解决的核心问题就是如何实时地计算出调用 HandleAttack() 函数的时间点。而所谓的时间点对应到 Music Track 上其实就是播放位置（Play Position），因此函数调用时机的判断条件转化为算术表达式就是：
 * 节拍点位置（Cue Position）- 当前播放位置（Current Position）< 武器充能时间长度（Charge Time Length）
 
 另外，考虑到音乐循环播放的情况，为了确保当前播放位置永远是与当前播放片段中的下一个节拍点进行比较，还有一个判断条件需要满足：
