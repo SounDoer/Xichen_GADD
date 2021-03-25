@@ -34,13 +34,25 @@ Audiokinetic Wwise 2019.2.9
 
 ### 那就自己动手写吧
 
-既然上述方案无法实现，那就只能跳出现有思路框架，自己动手实现了，需要解决的核心问题就是如何实时地计算出调用 HandleAttack() 函数的时间点。
 
-#### 实时获取音乐播放位置
+既然上述方案无法实现，那就只能跳出现有思路框架，自己动手实现了，需要解决的核心问题就是如何实时地计算出调用 HandleAttack() 函数的时间点。而所谓的时间点对应到 Music Track 上其实就是播放位置（Play Position），因此满足函数调用时机的判断条件转化为算术表达式就是：\
+* 节拍点位置 - 当前播放位置 < 武器充能时间长度
+
+而且考虑到音乐会循环播放的情况，为了确保当前播放位置永远是与当前播放片段中的下一个节拍点进行比较，还有一个判断条件需要满足：
+* 节拍点位置 > 当前播放位置
+
+所以设法获取到节拍点位置和当前播放位置的信息就能计算出调用函数的时间点。
+
+#### 获取当前播放位置信息
+
+#### 获取节拍点位置信息
+
 
 ####
 
 ![Music As Level Design - Solution Overview](media/MusicAsLevelDesign_SolutionOverview_S.jpeg)
+
+![Music As Level Design - UE Blueprint Implementation](media/MusicAsLevelDesign_BlueprintImplementation.png)
 
 ### Thought
 
