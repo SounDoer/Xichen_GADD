@@ -1,7 +1,7 @@
 # “音乐作为关卡设计” UE & Wwise 实践案例
 
-2021年1月 Global Game Jam，我与叶梓涛做了一款着重声音体验的禅意动作游戏[《剑入禅境 Sword Zen》](https://yezi.itch.io/sz)。受限于 GameJam 开发时间，当时的设计想法并没有能够彻底实现；不少玩家朋友们试玩之后发来了反馈，也让我们有了新的灵感。因此正好把这个项目作为个人的游戏开发练习，我开始从核心声音体验和玩法扩展性的角度入手重新编写了代码。\
-在完成了原有玩法的重构之后，将要进行的一个最大的设计改动就是要让玩家的操作与游戏中的音乐产生更强的关联。音乐不再只是游戏进度的提示和主观情绪的表达，而是提供了更类似于音乐节奏游戏中“音乐作为关卡设计”的功能。比如，通过音乐中的节拍点来控制敌人的攻击行为，这样的话玩家作出相应反馈时的格挡成功与失败的时间点都会统一在音乐整体的节奏中，给玩家一种类似音游的打击爽快感；同时，这也为之后互动音乐的设计提供了更多可能性，根据玩家单次或多次的格挡结果来顺畅地衔接不同的音乐片段，引导玩家情绪和切换游戏阶段。\
+2021年1月 Global Game Jam，我与叶梓涛做了一款着重声音体验的禅意动作游戏[《剑入禅境 Sword Zen》](https://yezi.itch.io/sz)。受限于 GameJam 开发时间，当时的设计想法并没有能够彻底实现；不少玩家朋友们试玩之后发来了反馈，也让我们有了新的灵感。因此正好把这个项目作为个人的游戏开发练习，我从核心声音体验和玩法扩展性的角度入手开始重新编写代码。\
+在完成了原有玩法的重构之后，将要进行的一个最大的设计改动就是要让玩家的操作与游戏中的音乐产生更强的关联。音乐不再只是游戏进度的提示和主观情绪的表达，而是要能提供更类似于音乐节奏游戏中“音乐作为关卡设计”的功能。比如，通过音乐中的节拍点来控制敌人的攻击行为，这样的话玩家作出相应反馈时的格挡成功与失败的时间点都会统一在音乐整体的节奏中，给玩家一种类似音游的打击爽快感；同时，这也为之后互动音乐的设计提供了更多可能性，根据玩家单次或多次的格挡结果来顺畅地衔接不同的音乐片段，引导玩家情绪和切换游戏阶段。\
 接下来我将使用游戏引擎 Unreal Engine 和音频中间件 Wwise 工具，以“音乐节拍信息控制敌人攻击行为”为例，来详细分析一下设计思路和代码实现的具体过程。
 ```
 开发环境与工具：
@@ -9,7 +9,7 @@ Unreal Engine 4.26 C++ & Blueprint
 Audiokinetic Wwise 2019.2.9
 ```
 
-### 设计需求图解
+### 明确设计需求
 
 ![HandleAttack Function Explanation](media/MusicAsLevelDesign_HandleAttack.jpeg)
 
@@ -18,7 +18,7 @@ Audiokinetic Wwise 2019.2.9
 
 ### 尝试使用 Wwise Trigger 功能
 
-如上一节所说，Wwise 本身已有根据音乐标记信息触发回调函数的功能，对于需要提前触发且对其节拍点的设计需求，我首先想到的是利用 Wwise 提供的 Trigger 功能。
+如上一节所说，Wwise 本身已有根据音乐标记信息触发回调函数的功能，对于需要提前触发且对齐节拍点的设计需求，我首先想到的是利用 Wwise 提供的 Trigger 功能。
 
 ![Wwise Trigger Solution](media/MusicAsLevelDesign_WwiseTriggerSolution.jpeg)
 
@@ -26,11 +26,11 @@ Audiokinetic Wwise 2019.2.9
 
 ![Wwise Trigger Solution Test](media/MusicAsLevelDesign_WwiseTriggerSolution_Test.png)
 
-但是！在 UE 中使用 Blueprint 进行快速验证后发现，通过 PostEvent 的方式触发 Trigger，Trigger 中包含的 Custom Cue 信息并不能被正确读取用来触发回调函数；进一步研究 Wwise SDK 后发现，通过 PostTrigger 的方式直接触发 Trigger 也不可行，此函数并没有开放任何与回调函数相关的接口。
+但是！在 UE 中使用 Blueprint 进行快速验证后发现，通过 PostEvent 的方式触发 Trigger，由 Trigger 控制的 Stinger 中包含的 Custom Cue 信息无法被获取；进一步研究 Wwise SDK 后发现，通过 PostTrigger 的方式直接触发 Trigger 也不可行，此函数并没有开放任何与回调函数相关的接口。
 
 ![Wwise SDK PostTrigger](media/MusicAsLevelDesign_AkSoundEngine_PostTrigger.png)
 
-至此，尝试使用 Wwise Trigger 功能来实现嵌套式的 Custom Cue 触发回调函数的方式验证不可行。
+至此，尝试使用 Wwise Trigger 功能来实现“嵌套式”的 Custom Cue 触发回调函数的方式验证不可行。
 
 ### 那就自己动手写吧
 
@@ -42,7 +42,7 @@ Audiokinetic Wwise 2019.2.9
 另外，考虑到音乐循环播放的情况，为了确保当前播放位置永远是与当前播放片段中的下一个节拍点进行比较，还有一个判断条件需要满足：
 * 节拍点位置（Cue Position）> 当前播放位置（Current Position）
 
-所以，设法获取到节拍点位置和当前播放位置的信息就能计算出调用函数的时间点。
+所以，只要设法获取到节拍点位置和当前播放位置的信息就能计算出调用函数的时间点。
 
 #### 获取当前播放位置信息
 
@@ -50,9 +50,9 @@ Audiokinetic Wwise 2019.2.9
 
 配合使用 AkCallbackType 标志 `AK_EnableGetSourcePlayPosition`，`AK::SoundEngine::PostEvent` 返回当前播放声音片段的 `AkPlayingID`，将此 ID 传入 `AK::SoundEngine::GetSourcePlayPosition` 即可获得当前的播放位置。
 
-注：有需要的话，可以使用 `AK::MusicEngine::GetPlayingSegmentInfo` 从返回的 `AkSegmentInfo` 中获取更多信息。
+注：有需要的话可以使用 `AK::MusicEngine::GetPlayingSegmentInfo`，从返回的 `AkSegmentInfo` 中获取更多信息。
 
-首先在 AkGameplayStatics 类中创建一个封装 `AK::SoundEngine::GetSourcePlayPosition` 的函数，便于之后在 C++ 和 Blueprint 中调用。
+首先在 AkGameplayStatics 类中创建一个封装 `AK::SoundEngine::GetSourcePlayPosition` 的函数，便于之后在 C++ 或 Blueprint 中调用。
 
 `AkGameplayStatics.h`
 ```
@@ -79,7 +79,7 @@ int32 UAkGameplayStatics::GetSourcePlayPosition(int32 PlayingID)
 }
 ```
 
-需要注意的是，UE Blueprint 中的 PostEvent 节点默认隐藏了 `AK_EnableGetSourcePlayPosition` 标志，因此需要做一些额外的修改将其暴露出来。在 AkGameplayTypes 类中的 `enum class EAkCallbackType` 部分添加以下信息。
+需要注意的是，Blueprint 中的 PostEvent 节点默认隐藏了 `AK_EnableGetSourcePlayPosition` 标志，因此需要做一些额外的修改将其暴露出来。在 AkGameplayTypes 类中的 `enum class EAkCallbackType` 部分添加以下信息。
 
 `AkGameplayTypes.h`
 ```
@@ -204,7 +204,7 @@ void AMainLevelManager::GetHandleEnemyAttackCueInfo()
 
 #### 计算函数调用时间点
 
-获取了当前播放位置和节拍点位置信息之后，就可以创建 `HandleEnemyAttackCueCallback()` 函数并依据上述两点判断条件来实时计算函数调用时间点了，且在每次判断为真且执行之后，获取下一个节拍点位置继续进行判断。
+获取了当前播放位置和节拍点位置的信息之后，就可以创建 `HandleEnemyAttackCueCallback()` 函数并依据上述两点判断条件来实时计算函数调用时间点了，且在每次判断为真且执行之后，获取下一个节拍点位置继续进行判断。
 
 ```
 void AMainLevelManager::HandleEnemyAttackCueCallback(int32 AkPlayingID)
@@ -245,12 +245,9 @@ void AMainLevelManager::HandleEnemyAttackCueCallback(int32 AkPlayingID)
 
 ![Final Solution Overview](media/MusicAsLevelDesign_SolutionOverview_S.jpeg)
 
-### Thought
+### 总结
 
-有可能需要改进的点
-
-更大的可能性
-Game Flow 都由音乐来控制
+最后，说回开头提到的“音乐作为关卡设计”的概念。这个案例只是简单地运用了节拍点这一元素，其实声音或音乐中还有很多丰富的元素，比如响度（Loudness）、频率（Frequency）、包络（Envelope）、音色（Timbre）、音调（Pitch）、旋律（Melody）与和弦（Chord）等，都可以被用来驱动游戏内各个方面的表现，甚至是影响玩法。
 
 #### Reference
 
@@ -258,6 +255,8 @@ Game Flow 都由音乐来控制
 [Wwise SDK - Integration Details - Music Callbacks](https://www.audiokinetic.com/library/edge/?source=SDK&id=soundengine_music_callbacks.html)\
 [Wwise SDK - Integration Details - Triggers](https://www.audiokinetic.com/library/edge/?source=SDK&id=soundengine_triggers.html)\
 [Wwise SDK - Integration Details - GetSourcePlayPosition](https://www.audiokinetic.com/library/edge/?source=SDK&id=soundengine_query_pos.html)\
+[Wwise SDK - GetPlayingSegmentInfo](https://www.audiokinetic.com/library/edge/?source=SDK&id=namespace_a_k_1_1_music_engine_ad10a9fa99ddf21c91718c52da48e460c.html)\
+[Wwise SDK - AkSegmentInfo Struct](https://www.audiokinetic.com/library/edge/?source=SDK&id=struct_ak_segment_info.html)\
 [Wwise SDK - AkCallbackType](https://www.audiokinetic.com/zh/library/edge/?source=SDK&id=_ak_callback_8h_a948c083ff18dc4c8dfe1d32cb0eb6732.html)\
 [Alessandro Fama - Playback position of sounds with Wwise + UE4](https://alessandrofama.com/tutorials/wwise-ue4/playback-position/)\
 [UE API - Get Data Table Row](https://docs.unrealengine.com/en-US/BlueprintAPI/Utilities/GetDataTableRow/index.html)
