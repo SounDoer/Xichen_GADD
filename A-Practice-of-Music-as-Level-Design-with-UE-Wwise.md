@@ -34,7 +34,7 @@ Audiokinetic Wwise 2019.2.9
 
 ### 那就自己动手写吧
 
-![Position On Track](media\MusicAsLevelDesign_PositionOnTrack.jpeg)
+![Position On Track](media/MusicAsLevelDesign_PositionOnTrack.jpeg)
 
 既然上述方案无法实现，那就只能跳出现有思路框架，自己动手实现了，需要解决的核心问题就是如何实时地计算出调用 HandleAttack() 函数的时间点。而所谓的时间点对应到 Music Track 上其实就是播放位置（Play Position），因此函数调用时机的判断条件转化为算术表达式就是：\
 * 节拍点位置（Cue Position）- 当前播放位置（Current Position）< 武器充能时间长度（Charge Time Length）
@@ -46,7 +46,7 @@ Audiokinetic Wwise 2019.2.9
 
 #### 获取当前播放位置信息
 
-![Wwise SDK GetSourcePlayPosition](media\MusicAsLevelDesign_AkSoundEngine_GetSourcePlayPosition.png)
+![Wwise SDK GetSourcePlayPosition](media/MusicAsLevelDesign_AkSoundEngine_GetSourcePlayPosition.png)
 
 配合使用 AkCallbackType 标志 `AK_EnableGetSourcePlayPosition`，`AK::SoundEngine::PostEvent` 返回当前播放声音片段的 `AkPlayingID`，将此 ID 传入 `AK::SoundEngine::GetSourcePlayPosition` 即可获得当前的播放位置。
 
@@ -91,7 +91,7 @@ CHECK_CALLBACK_TYPE_VALUE(EnableGetSourcePlayPosition);
 
 这样一来就能在 PostEvent 节点中的 Callback Mask 下拉菜单里选择 Enable Get Source Play Position 选项了。
 
-![PostEvent Callback Mask](media\MusicAsLevelDesign_Blueprint_PostEventCallbackMask.png)
+![PostEvent Callback Mask](media/MusicAsLevelDesign_Blueprint_PostEventCallbackMask.png)
 
 #### 获取节拍点位置信息
 
@@ -119,7 +119,7 @@ struct FMusicCueStruct : public FTableRowBase
 };
 ```
 
-![MusicCue Data Table](media\MusicAsLevelDesign_MusicCueDataTable.png)
+![MusicCue Data Table](media/MusicAsLevelDesign_MusicCueDataTable.png)
 
 考虑到仍然需要使用 Wwise State 来切换音乐片段，切换的同时需要加载对应片段的 MusicCue Data Table，因此需要创建 `MusicSegmentStruct.h` 和相对应的 MusicSegment Data Table，将 Wwise State 和 MusicCue Data Table 进行统一管理和调用。
 
@@ -149,7 +149,7 @@ struct FMusicSegmentStruct : public FTableRowBase
 };
 ```
 
-![MusicSegment Data Table](media\MusicAsLevelDesign_MusicSegmentDataTable.png)
+![MusicSegment Data Table](media/MusicAsLevelDesign_MusicSegmentDataTable.png)
 
 最后，创建 `SetMusicStateToGetSegmentInfo()` 函数用于在 Blueprint 中配合 GetDataTableRow 节点来调取上述数据。
 
