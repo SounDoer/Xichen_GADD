@@ -1,4 +1,4 @@
-# Ways of Getting Spectrum Info in Unreal Engine
+# “声音可视化” UE & Wwise 实践案例
 
 Envelope / Amplitude / Magnitude
 Weighted Loudness
