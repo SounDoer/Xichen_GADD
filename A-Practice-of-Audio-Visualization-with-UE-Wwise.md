@@ -1,23 +1,31 @@
 # “音频可视化” UE & Wwise 实践案例
 
-### 音频可视化（Audio Visualization）的要素
+继上一篇文章[《“音乐作为关卡设计” UE & Wwise 实践案例》](https://github.com/SounDoer/Xichen_GADD/blob/main/A-Practice-of-Music-as-Level-Design-with-UE-Wwise.md)中运用音乐中的标记信息来触发游戏事件之后，我想在个人练习项目里想实现的下一个功能是用音乐中的信息来驱动视觉效果的表现，也就是通常说的音频可视化（Audio Visualization）。\
+音频可视化本身是一个大课题，在数字艺术和现场表演等领域已经有了成熟的工具和艺术表达。本文不讨论任何与具体表现效果相关的话题，仅从基本的
 
-### 预期效果与实现手段
+### 音频可视化的要素
+
+### 现有工具的局限
+
+### 具体的实现思路
 
 UE 原生功能组件
 Wwise 局限
 
-### 声音包络（Envelope）
+#### 时域：声音包络（Envelope）
 
+一维的连续变化的数据
 Envelope / Amplitude / Magnitude
 Weighted Loudness
 
-### 声音频谱（Spectrum）
+#### 频域：声音频谱（Spectrum）
 
-### 声音时频谱（Spectrogram）
-
+一维数组
 Frequency
 Spectrum
+
+#### 时域与频域：声音时频谱（Spectrogram）
+
 Spectrogram
 
 ### 更进一步的代码实现
