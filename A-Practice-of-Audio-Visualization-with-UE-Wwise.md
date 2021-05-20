@@ -55,6 +55,14 @@ Spectrogram
 
 
 #### Reference
+
+[Unreal Engine Blueprint API Reference - Audio Component](https://docs.unrealengine.com/en-US/BlueprintAPI/Audio/Components/Audio/index.html)\
+[Unreal Engine Blueprint API Reference - Audio Analysis](https://docs.unrealengine.com/en-US/BlueprintAPI/Audio/Analysis/index.html)\
+[Unreal Engine Blueprint API Reference - Audio Analyzer](https://docs.unrealengine.com/en-US/BlueprintAPI/AudioAnalyzer/index.html)\
+[Unreal Engine Blueprint API Reference - Sound Visualization](https://docs.unrealengine.com/en-US/BlueprintAPI/SoundVisualization/index.html)\
+[Unreal Engine Blueprint API Reference - Time Synth](https://docs.unrealengine.com/en-US/BlueprintAPI/TimeSynth/index.html)\
+[Unreal Engine 4 Documentation - Audio Synesthesia](https://docs.unrealengine.com/en-US/WorkingWithMedia/Audio/Synesthesia/index.html)
+
 [UE4 / Unreal Engine 4 / Audio Visualiser - #01 Dancing Cube Array.](https://www.youtube.com/watch?v=ix3oa7nB2VA)
 
 
