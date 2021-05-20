@@ -10,7 +10,7 @@ Audiokinetic Wwise 2021.1.0
 
 ### 音频可视化的元素
 
-对于数字音频信号的分析，通常可以从时域（Time Domain）和频域（Frequency Domain）两个方面入手，相关的分析工具和表现形式在各类播放器和音频工具中其实都很常见。
+对于数字音频信号的分析，通常可以从**时域**（Time Domain）和**频域**（Frequency Domain）两个方面入手，相关的分析工具和表现形式在各类播放器和音频工具中其实都很常见。
 
 简单来说，从时域上分析可以得知音频信号的能量大小随时间变化的情况，根据不同的计算与加权方式可以表示各种与能量相关的数值情况。比如，峰值（Peak）表现在声音波形（Waveform）上就是波形最外层的包络曲线（Envelope），响度（Loudness）表现在表头上就是实时变化的数值指示。
 
@@ -20,7 +20,7 @@ Audiokinetic Wwise 2021.1.0
 
 ![Spectrum](media/AudioVisualization_Spectrum.png)
 
-除此之外，还有一种将时域和频域信息整合在一起的可视化方式，即时频谱（Spectrogram），3D 形式的时频谱通常也因其形式特征而被叫做“瀑布图”。
+除此之外，还有一种将时域和频域信息整合在一起的可视化方式，即时频谱（Spectrogram），3D 形式的时频谱也因其立体形象而被叫做“瀑布图”。
 
 ![Spectrogram](media/AudioVisualization_Spectrogram.png)
 
