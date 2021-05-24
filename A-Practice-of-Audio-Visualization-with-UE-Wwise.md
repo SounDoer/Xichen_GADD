@@ -42,9 +42,24 @@ Audiokinetic Wwise 2021.1.0
 
 这个变量数值可以直接在中间件里使用 Wwise Meter 效果插件来获取，并通过 Game Parameter 的方式传回到引擎中。
 
+![Wwise Meter RTPC](media/AudioVisualization_Envelope_Wwise_Meter_RTPC.png)
+
+
+![UE Update Envelope Line](media/AudioVisualization_Envelope_UE_UpdateEnvelopeLine.png)
+
+
 ### 频域：声音频谱（Spectrum）
 
-一维数组
+二维数组
+
+![UE Audio Synesthesia](media/AudioVisualization_Spectrum_Synesthesia_ConstantQNRT_Object.png)
+
+
+![UE Audio Synesthesia Native Audio Component](media/AudioVisualization_Spectrum_Synesthesia_NativeAudioComp.png)
+
+
+![UE Audio Synesthesia Wwise Control](media/AudioVisualization_Spectrum_Synesthesia_WwiseControl.png)
+
 
 ### 时域与频域：声音时频谱（Spectrogram）
 
