@@ -40,13 +40,17 @@ Audiokinetic Wwise 2021.1.0
 
 首先从相对简单的 Envelope 入手。从数据类型来看，音频信号在时域上的瞬时值可以理解为是一个随时间快速变化的浮点数变量，可以直接用来驱动视觉元素的各种参数；更进一步，可以将一段时间内的变量数值先存储进数组，然后用数组来驱动视觉元素的变化，这样就能表现出音频信号在一段时间内的 Envelope 形态。
 
-这个变量数值可以直接在中间件里使用 Wwise Meter 效果插件来获取，并通过 Game Parameter 的方式传回到引擎中。
+如上一节实现思路中所提到的，想尽可能在 Wwise 框架下实现功能，而 Wwise Meter 插件正好可以满足这一要求。在中间件内 Audio Bus 上使用 Wwise Meter 插件来获取音频信号的时域瞬时值，然后映射到创建的 Game Parameter 上，最后在引擎中通过 GetRTPCValue 节点来获取该数值。
 
 ![Wwise Meter RTPC](media/AudioVisualization_Envelope_Wwise_Meter_RTPC.png)
 
+在引擎中获取到该数值后，首先通过 MapRangeClamped 和 FInterpTo 节点对数据进行标准化和平滑处理。然后，将数据存入一个定长的浮点数数组中，数组长度可以根据需要展示的 Envelope 长度来决定。更新数组内数据的思路是，在每一次 Tick 时，最新的数值永远存储在数组的最开头位置，数组之后的位置依次复制前一位的数值，这样就能将一段时间内的数值变化存储下来并且持续进行更新。如果以每秒 60 帧的 Tick 速率来计算，长度为 60 的数组可以记录 1 秒内的数值变化。最后，就可以用该数组内的数据来同步驱动视觉元素的表现了。
 
 ![UE Update Envelope Line](media/AudioVisualization_Envelope_UE_UpdateEnvelopeLine.png)
 
+效果如下动图。
+
+![]()
 
 ### 频域：声音频谱（Spectrum）
 
@@ -74,7 +78,8 @@ Audiokinetic Wwise 2021.1.0
 [Unreal Engine Blueprint API Reference - Audio Analyzer](https://docs.unrealengine.com/en-US/BlueprintAPI/AudioAnalyzer/index.html)\
 [Unreal Engine Blueprint API Reference - Sound Visualization](https://docs.unrealengine.com/en-US/BlueprintAPI/SoundVisualization/index.html)\
 [Unreal Engine Blueprint API Reference - Time Synth](https://docs.unrealengine.com/en-US/BlueprintAPI/TimeSynth/index.html)\
-[Unreal Engine 4 Documentation - Audio Synesthesia](https://docs.unrealengine.com/en-US/WorkingWithMedia/Audio/Synesthesia/index.html)
+[Unreal Engine 4 Documentation - Audio Synesthesia](https://docs.unrealengine.com/en-US/WorkingWithMedia/Audio/Synesthesia/index.html)\
+[Wwise Help - Wwise Meter](https://www.audiokinetic.com/library/edge/?source=Help&id=wwise_meter_plug_in_effect)
 
 
 希辰\
