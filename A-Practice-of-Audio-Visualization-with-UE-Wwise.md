@@ -77,8 +77,18 @@ Audiokinetic Wwise 2021.1.0
 
 ### 时域与频域：声音时频谱（Spectrogram）
 
+![UE BP Spectrogram Overview](media/AudioVisualization_Spectrogram_UE_Overview.png)
 
-### 更进一步的代码实现
+![UE Spectrogram Matrix Initial](media/AudioVisualization_Spectrogram_SpectrogramMatrixInitial.png)
+
+![UE BP Spawn Spectrogram Matrix](media/AudioVisualization_Spectrogram_UE_SpawnSpectrogramMatrix.png)
+
+![UE BP Update Spectrogram](media/AudioVisualization_Spectrogram_UE_UpdateSpectrogram.png)
+
+![Audio Visualization Spectrogram Demo](media/AudioVisualization_Spectrogram_Demo.gif)
+
+
+### 总结
 
 
 #### Reference
