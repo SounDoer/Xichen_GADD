@@ -29,9 +29,9 @@ Audiokinetic Wwise 2021.1.0
 ### 结合现有工具的实现思路
 
 由于项目已有的音频功能都是基于中间件 Wwise 的，音频可视化的实现也需要统一在同一框架下，因此具体的实现方式也多了一些限制和要求：
-1. 由于编程水平有限，尽量不考虑自己写代码的方式来实现；
+1. 由于编程水平有限，尽量不考虑自己修改或重写代码的方式来实现；
 2. 据我了解，除了 Wwise Meter 插件之外，目前 Wwise 并没有直接与音频分析相关的功能，无法从 Wwise 中便捷地获取频谱相关的声音信息；
-3. 如下图，UE 引擎确实有不少与音频分析相关的功能，但需要在其自身的音频系统框架下使用，这样一来，声音资源的管理和控制都将与 Wwise 脱节，因此也不适用；
+3. UE 引擎确实有不少与音频分析相关的功能，但需要在其自身的音频系统框架下使用，这样一来，声音资源的管理和控制都将与 Wwise 脱节，因此也不适用。
 ![UE Blueprint Audio Visualization](media/AudioVisualization_UE_Blueprint_Overview.png)
 
 所以，一种可行的实现思路是，利用 UE 引擎中的功能对声音文件进行分析并存储相应的数据，然后通过 Wwise 控制声音的播放并调用对应时刻的信息。
@@ -50,11 +50,16 @@ Audiokinetic Wwise 2021.1.0
 
 效果如下动图。
 
-![]()
+![Audio Visualization Envelope Demo](media/AudioVisualization_Envelope_Demo.gif)
 
 ### 频域：声音频谱（Spectrum）
 
-二维数组
+从数据类型来看，音频信号在某一时刻的频谱信息可以理解为是一个浮点数数组，数组长度代表了频率范围，而其中各个位置上的数值可以看作是时域瞬时值在频域上的展开。用该数组驱动视觉元素的变化并不断更新，就可以表现音频信号的 Spectrum 形态。
+
+目前 UE Audio Synesthesia 组件提供了三种音频分析工具 LoudnessNRT、ConstantQNRT 和 OnsetNRT，分别可以提取音频信号的响度、频谱和瞬态变化的信息。其中 NRT 的意思是非实时（Non Real Time），工作原理是将 Wav 音频文件导入引擎中并配置分析工具，分析得到的数据会被保存在相应的 NRT 对象中，获取当前音频信号的播放位置即可从 NRT 对象中读取对应时刻的信息。\
+因此，可以使用 ConstantQNRT 分析工具来获取并保存音频信号的频谱信息。其中 ConstantQ 指的是信号处理中的[常数Q变换](https://en.wikipedia.org/wiki/Constant-Q_transform)，与常见的傅里叶变化有关。具体有何区别我也讲不清，反正可以用来获取声音的频域信息就对了。
+
+
 
 ![UE Audio Synesthesia](media/AudioVisualization_Spectrum_Synesthesia_ConstantQNRT_Object.png)
 
