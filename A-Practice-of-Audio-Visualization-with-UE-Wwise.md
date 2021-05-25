@@ -59,13 +59,15 @@ Audiokinetic Wwise 2021.1.0
 目前 UE Audio Synesthesia 组件提供了三种音频分析工具 LoudnessNRT、ConstantQNRT 和 OnsetNRT，分别可以提取音频信号的响度、频谱和瞬态变化的信息。其中 NRT 的意思是非实时（Non Real Time），工作原理是将 Wav 音频文件导入引擎中并配置分析工具，分析得到的数据会被保存在相应的 NRT 对象中，获取当前音频信号的播放位置即可从 NRT 对象中读取对应时刻的信息。\
 因此，可以使用 ConstantQNRT 分析工具来获取并保存音频信号的频谱信息。其中 ConstantQ 指的是信号处理中的[常数Q变换](https://en.wikipedia.org/wiki/Constant-Q_transform)，与常见的傅里叶变化有关。具体有何区别我也讲不清，反正可以用来获取声音的频域信息就对了。
 
-
+如下图，首先在引擎中创建 ConstantQNRT 对象，并在其中配置需要分析的音频文件。有需要的话，还可以创建 ConstantQNRT Setting 对象，其中可以进一步设置与频谱分析相关的各种参数。
 
 ![UE Audio Synesthesia](media/AudioVisualization_Spectrum_Synesthesia_ConstantQNRT_Object.png)
 
+接下来，使用引擎原生的 Audio Component 来设置播放的音频文件并获取其时长，然后通过 OnAudioPlaybackPercent 事件来获取 Playback Percent，该数值与音频文件时长相乘即可得到以秒为单位的 Current Play Position，最后使用 GetNormalizedChannelConstantQAtTime 节点来读取 ConstantQNRT 中相应时刻的信息。
 
 ![UE Audio Synesthesia Native Audio Component](media/AudioVisualization_Spectrum_Synesthesia_NativeAudioComp.png)
 
+以上，就是使用 UE 引擎原生组件来获取声音频谱信息的方式。如果要引入中间件 Wwise 来实现，只要能获取音频文件的当前播放位置就可以了。
 
 ![UE Audio Synesthesia Wwise Control](media/AudioVisualization_Spectrum_Synesthesia_WwiseControl.png)
 
