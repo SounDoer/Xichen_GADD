@@ -59,7 +59,7 @@ Envelope 效果如下动图。
 目前 UE Audio Synesthesia 组件提供了三种音频分析工具 LoudnessNRT、ConstantQNRT 和 OnsetNRT，分别可以提取音频信号的响度、频谱和瞬态变化的信息。其中 NRT 的意思是非实时（Non Real Time），工作原理是将 Wav 音频文件导入引擎中并配置分析工具，分析得到的数据会被保存在相应的 NRT 对象中，获取当前音频信号的播放位置即可从 NRT 对象中读取对应时刻的信息。\
 因此，可以使用 ConstantQNRT 分析工具来获取并保存音频信号的频谱信息。其中 ConstantQ 指的是信号处理中的[常数Q变换](https://en.wikipedia.org/wiki/Constant-Q_transform)，与常见的傅里叶变化有关。具体有何区别我也讲不清，反正可以用来获取声音的频域信息就对了。
 
-如下图，首先在引擎中创建 ConstantQNRT 对象，并在其中配置需要分析的音频文件。有需要的话，还可以创建 ConstantQNRT Setting 对象，其中可以进一步设置与频谱分析相关的各种参数。
+如下图，首先在引擎中创建 ConstantQNRT 对象，并在其中配置需要分析的音频文件。有需要的话，还可以创建 ConstantQNRT Setting 对象，进一步设置与频谱分析相关的各种参数。
 
 ![UE Audio Synesthesia](media/AudioVisualization_Spectrum_Synesthesia_ConstantQNRT_Object.png)
 
@@ -67,7 +67,7 @@ Envelope 效果如下动图。
 
 ![UE Audio Synesthesia Native Audio Component](media/AudioVisualization_Spectrum_Synesthesia_NativeAudioComp.png)
 
-以上，就是使用 UE 引擎原生组件来获取声音频谱信息的方式。如果要引入中间件 Wwise 来控制，只要能获取音频文件的当前播放位置就可以了。在[《“音乐作为关卡设计” UE & Wwise 实践案例》](https://github.com/SounDoer/Xichen_GADD/blob/main/A-Practice-of-Music-as-Level-Design-with-UE-Wwise.md)的“[获取当前播放位置信息](https://github.com/SounDoer/Xichen_GADD/blob/main/A-Practice-of-Music-as-Level-Design-with-UE-Wwise.md#%E8%8E%B7%E5%8F%96%E5%BD%93%E5%89%8D%E6%92%AD%E6%94%BE%E4%BD%8D%E7%BD%AE%E4%BF%A1%E6%81%AF)”章节中，讲解了创建 GetSourcePlayPosition 函数从 PostAkEvent 节点的 Callback 信息中获取当前播放位置的方法，在这里直接使用这一函数节点就能从 Wwise 控制的音频文件中获取当前播放位置，然后就仍然可以使用 GetNormalizedChannelConstantQAtTime 节点来读取 ConstantQNRT 中相应时刻的数组信息了，最后用此数据来同步驱动视觉元素的表现。
+以上，就是使用 UE 引擎原生组件来获取声音频谱信息的方式。如果要引入中间件 Wwise 来控制，只要能获取音频文件的当前播放位置就可以了。在[《“音乐作为关卡设计” UE & Wwise 实践案例》](https://github.com/SounDoer/Xichen_GADD/blob/main/A-Practice-of-Music-as-Level-Design-with-UE-Wwise.md)的“[获取当前播放位置信息](https://github.com/SounDoer/Xichen_GADD/blob/main/A-Practice-of-Music-as-Level-Design-with-UE-Wwise.md#%E8%8E%B7%E5%8F%96%E5%BD%93%E5%89%8D%E6%92%AD%E6%94%BE%E4%BD%8D%E7%BD%AE%E4%BF%A1%E6%81%AF)”章节中，讲解了创建 GetSourcePlayPosition 函数从 PostAkEvent 节点的 Callback 信息中获取当前播放位置的方法，在这里直接使用这一函数节点就能从 Wwise 控制的音频文件中获取当前播放位置，然后仍旧可以使用 GetNormalizedChannelConstantQAtTime 节点来读取 ConstantQNRT 中相应时刻的数组信息了，最后用此数据来同步驱动视觉元素的表现。
 
 ![UE Audio Synesthesia Wwise Control](media/AudioVisualization_Spectrum_Synesthesia_WwiseControl.png)
 
@@ -83,7 +83,7 @@ Spectrum 效果如下动图。
 
 ![UE BP Spectrogram Overview](media/AudioVisualization_Spectrogram_UE_Overview.png)
 
-在 SpawnSpectrogramMatrix 函数节点中，首先以 SpectrumBandNumber 为行长、SpectrogramLength 为列长来生成二维矩阵。其中 SpectrumBandNumber 对应的是从 ConstantQNRT 对象中获取到的单个 Spectrum 数据的数组长度，可以在 ConstantQNRT Setting 对象中设置；SpectrogramLength 表示的是同时展示的 Spectrum 数组的个数，数值越大则表现内容的时间间隔越长。\
+在 SpawnSpectrogramMatrix 函数节点中，首先以 SpectrumBandNumber 为行长、SpectrogramLength 为列长来生成二维矩阵。其中 SpectrumBandNumber 对应的是从 ConstantQNRT 对象中获取到的单个 Spectrum 数据的数组长度，可以在 ConstantQNRT Setting 对象中设置；SpectrogramLength 表示的是同时展示的 Spectrum 数组的个数，数值越大则表现内容的时长越长。\
 另外，在将生成的视觉元素存入数组的同时，需要将每一列最开始元素的索引值存入到 ColumnStartIndexArray 数组中，之后用来指示每一个 Spectrum 数组在矩阵中更新数据的起始位置。
 
 ![UE Spectrogram Matrix Initial](media/AudioVisualization_Spectrogram_SpectrogramMatrixInitial.png)
@@ -100,8 +100,8 @@ Spectrogram 效果如下动图。
 
 ### 总结
 
-上述方法只是取巧地在文章开头提出的要求与限制下来实现音频可视化的功能，从各个方面来评判都算不上是最优解。一个显而易见的问题就是，同一个音频文件需要在引擎和中间件中分别导入，一份用于数据分析，一份用于播放控制，如果文件数量很多的话，就会造成存储资源的浪费。\
-所以，如果没有需要配合中间件的要求，大可以直接使用 UE 引擎的原生功能来实现简单的音频可视化；或者，相信 Wwise 之后应该也会推出更多音频分析相关的工具，吧。
+上述方法只是在文章开头提出的要求与限制下取巧地实现了音频可视化的功能，从各个方面来评判都算不上是最优解。一个显而易见的问题就是，同一个音频文件需要在引擎和中间件中分别导入，一份用于数据分析，一份用于播放控制，如果文件数量很多的话，就会造成存储资源的浪费。\
+所以，如果没有需要配合中间件的要求，大可以直接使用 UE 引擎的原生功能来实现简单的音频可视化功能；当然理想情况是，Wwise 自身能有更多音频分析相关的功能和与引擎进行数据通信的方式。
 
 #### Reference
 
