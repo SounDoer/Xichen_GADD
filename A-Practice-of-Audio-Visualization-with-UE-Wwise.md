@@ -77,6 +77,10 @@ Audiokinetic Wwise 2021.1.0
 
 ### 时域与频域：声音时频谱（Spectrogram）
 
+在实现了 Envelope 和 Spectrum 之后，再来理解 Spectrogram 就简单多了。Spectrogram 可以看作是由 Envelope 和 Spectrum 两者构成的一个二维数组，或者形象地来看就是一个二维矩阵，其中 Envelope 一轴表示的是时域，Spectrum 表示的则是频域。
+
+
+
 ![UE BP Spectrogram Overview](media/AudioVisualization_Spectrogram_UE_Overview.png)
 
 ![UE Spectrogram Matrix Initial](media/AudioVisualization_Spectrogram_SpectrogramMatrixInitial.png)
