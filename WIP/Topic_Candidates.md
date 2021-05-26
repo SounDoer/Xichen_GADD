@@ -3,7 +3,7 @@
 Ambience Sound Design\
 Location-Based or Player-Centered
 
-Cinematic Sound Design and Implementation Logic
+Cinematic Sound Implementation and Mixing with Level Sequence in UE
 
 Why no sound?!
 
