@@ -48,7 +48,7 @@ Audiokinetic Wwise 2021.1.0
 
 ![UE Update Envelope Line](media/AudioVisualization_Envelope_UE_UpdateEnvelopeLine.png)
 
-效果如下动图。
+Envelope 效果如下动图。
 
 ![Audio Visualization Envelope Demo](media/AudioVisualization_Envelope_Demo.gif)
 
@@ -71,7 +71,7 @@ Audiokinetic Wwise 2021.1.0
 
 ![UE Audio Synesthesia Wwise Control](media/AudioVisualization_Spectrum_Synesthesia_WwiseControl.png)
 
-效果如下动图。
+Spectrum 效果如下动图。
 
 ![Audio Visualization Spectrum Demo](media/AudioVisualization_Spectrum_Demo.gif)
 
@@ -90,12 +90,13 @@ Audiokinetic Wwise 2021.1.0
 
 ![UE BP Spawn Spectrogram Matrix](media/AudioVisualization_Spectrogram_UE_SpawnSpectrogramMatrix.png)
 
-
+在 UpdateSpectrogram 函数节点中，遍历 ColumnStartIndexArray 数组并结合 SpectrumBandNumber 数值来找到每一列的起止范围；同时，以 CurrentPlayPosition 为基准、根据 ColumnStartIndexArray 中的索引值来对送入 GetNormalizedChannelConstantQAtTime 节点的 InSeconds 数值做偏差调整，这样就能从 ConstantQNRT 对象中获取一段时间内连续多个 Spectrum 数组的数据了。
 
 ![UE BP Update Spectrogram](media/AudioVisualization_Spectrogram_UE_UpdateSpectrogram.png)
 
-![Audio Visualization Spectrogram Demo](media/AudioVisualization_Spectrogram_Demo.gif)
+Spectrogram 效果如下动图。
 
+![Audio Visualization Spectrogram Demo](media/AudioVisualization_Spectrogram_Demo.gif)
 
 ### 总结
 
