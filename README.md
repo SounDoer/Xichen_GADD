@@ -1,8 +1,7 @@
 # Xichen's Game Audio Design Document
 # 希辰的游戏音频设计文档
 
-以专题文章的形式分享我对游戏音频设计的严肃思考。\
-文档首发于 [SounDoer.com](https://soundoer.com/game-audio-design-document/)，持续更新中。
+以专题文章的形式分享我对游戏音频设计的严肃思考，持续更新中。
 
 * [前言](Preface.md)
 * [如何搜索有关音频设计的资讯](How-to-Search-Audio-Design-Information.md)
@@ -18,15 +17,15 @@
 
 Xichen Shen
 
-Apr 2019 - Present, Audio Designer at NExT Studios\
+Apr 2019 - Present, Audio Designer at NExT Studios  
 Synced Off Planet
 
-Aug 2015 - Apr 2019, Audio Designer at Ubisoft Shanghai\
-Far Cry Primal\
-Far Cry 5\
-Far Cry 5 DLC: Lost On Mars\
-Far Cry 5 DLC: Hours of Darkness\
-Far Cry New Dawn
+Aug 2015 - Apr 2019, Audio Designer at Ubisoft Shanghai  
+Far Cry Primal  
+Far Cry 5  
+Far Cry 5 DLC: Lost On Mars  
+Far Cry 5 DLC: Hours of Darkness  
+Far Cry New Dawn  
 
 Contact: xichen@soundoer.com
 
