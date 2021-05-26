@@ -79,13 +79,18 @@ Audiokinetic Wwise 2021.1.0
 
 在实现了 Envelope 和 Spectrum 之后，再来理解 Spectrogram 就简单多了。Spectrogram 可以看作是由 Envelope 和 Spectrum 两者构成的一个二维数组，或者形象地来看就是一个二维矩阵，其中 Envelope 一轴表示的是时域，Spectrum 表示的则是频域。
 
-
+获取当前播放位置和对应时刻频谱数据的方法与上一节 Spectrum 类似，主要区别在于如何用 Spectrum 数组信息来生成和驱动视觉元素二维矩阵的变化。如下图，通过 SpawnSpectrogramMatrix 和 UpdateSpectrogram 两个函数节点来实现。
 
 ![UE BP Spectrogram Overview](media/AudioVisualization_Spectrogram_UE_Overview.png)
+
+在 SpawnSpectrogramMatrix 函数节点中，首先以 SpectrumBandNumber 为行长、SpectrogramLength 为列长来生成二维矩阵。其中 SpectrumBandNumber 对应的是从 ConstantQNRT 对象中获取到的单个 Spectrum 数据的数组长度，可以在 ConstantQNRT Setting 对象中设置；SpectrogramLength 表示的是同时展示的 Spectrum 数组的个数，数值越大则表现内容的时间间隔越长。\
+另外，在将生成的视觉元素存入数组的同时，需要将每一列最开始元素的索引值存入到 ColumnStartIndexArray 数组中，之后用来指示每一个 Spectrum 数组在矩阵中更新数据的起始位置。
 
 ![UE Spectrogram Matrix Initial](media/AudioVisualization_Spectrogram_SpectrogramMatrixInitial.png)
 
 ![UE BP Spawn Spectrogram Matrix](media/AudioVisualization_Spectrogram_UE_SpawnSpectrogramMatrix.png)
+
+
 
 ![UE BP Update Spectrogram](media/AudioVisualization_Spectrogram_UE_UpdateSpectrogram.png)
 
