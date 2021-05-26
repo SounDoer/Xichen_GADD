@@ -1,6 +1,6 @@
 # “音频可视化” UE & Wwise 实践案例
 
-继上一篇文章[《“音乐作为关卡设计” UE & Wwise 实践案例》](https://github.com/SounDoer/Xichen_GADD/blob/main/A-Practice-of-Music-as-Level-Design-with-UE-Wwise.md)中运用音乐中的标记信息来触发游戏事件之后，我想在个人练习项目里想实现的下一个功能是用音乐中的信息来驱动视觉效果的表现，也就是通常说的音频可视化（Audio Visualization）。\
+继上一篇文章[《“音乐作为关卡设计” UE & Wwise 实践案例》](A-Practice-of-Music-as-Level-Design-with-UE-Wwise.md)中运用音乐中的标记信息来触发游戏事件之后，我想在个人练习项目里想实现的下一个功能是用音乐中的信息来驱动视觉效果的表现，也就是通常说的音频可视化（Audio Visualization）。\
 音频可视化本身是一个大课题，在数字艺术和现场表演等领域已经有了成熟的工具和艺术表达。本文不讨论艺术方面的表现效果，也不深究音频信号的数理定义，仅从基本概念入手，结合引擎工具 Unreal Engine 和音频中间件 Wwise 已有的功能，来实现一些基本的音频可视化效果。
 ```
 开发环境与工具：
@@ -67,7 +67,7 @@ Envelope 效果如下动图。
 
 ![UE Audio Synesthesia Native Audio Component](media/AudioVisualization_Spectrum_Synesthesia_NativeAudioComp.png)
 
-以上，就是使用 UE 引擎原生组件来获取声音频谱信息的方式。如果要引入中间件 Wwise 来控制，只要能获取音频文件的当前播放位置就可以了。在[《“音乐作为关卡设计” UE & Wwise 实践案例》](https://github.com/SounDoer/Xichen_GADD/blob/main/A-Practice-of-Music-as-Level-Design-with-UE-Wwise.md)的“[获取当前播放位置信息](https://github.com/SounDoer/Xichen_GADD/blob/main/A-Practice-of-Music-as-Level-Design-with-UE-Wwise.md#%E8%8E%B7%E5%8F%96%E5%BD%93%E5%89%8D%E6%92%AD%E6%94%BE%E4%BD%8D%E7%BD%AE%E4%BF%A1%E6%81%AF)”章节中，讲解了创建 GetSourcePlayPosition 函数从 PostAkEvent 节点的 Callback 信息中获取当前播放位置的方法，在这里直接使用这一函数节点就能从 Wwise 控制的音频文件中获取当前播放位置，然后仍旧可以使用 GetNormalizedChannelConstantQAtTime 节点来读取 ConstantQNRT 中相应时刻的数组信息了，最后用此数据来同步驱动视觉元素的表现。
+以上，就是使用 UE 引擎原生组件来获取声音频谱信息的方式。如果要引入中间件 Wwise 来控制，只要能获取音频文件的当前播放位置就可以了。在[《“音乐作为关卡设计” UE & Wwise 实践案例》](A-Practice-of-Music-as-Level-Design-with-UE-Wwise.md)的“获取当前播放位置信息”章节中，讲解了创建 GetSourcePlayPosition 函数从 PostAkEvent 节点的 Callback 信息中获取当前播放位置的方法，在这里直接使用这一函数节点就能从 Wwise 控制的音频文件中获取当前播放位置，然后仍旧可以使用 GetNormalizedChannelConstantQAtTime 节点来读取 ConstantQNRT 中相应时刻的数组信息了，最后用此数据来同步驱动视觉元素的表现。
 
 ![UE Audio Synesthesia Wwise Control](media/AudioVisualization_Spectrum_Synesthesia_WwiseControl.png)
 
