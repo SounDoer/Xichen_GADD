@@ -3,6 +3,7 @@
 Ambience Sound Design\
 Location-Based or Player-Centered
 
+From Channel-Based To Object-Based  
 Cinematic Sound Implementation and Mixing with Level Sequence in UE
 
 Why no sound?!
