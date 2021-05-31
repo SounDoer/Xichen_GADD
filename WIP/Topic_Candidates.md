@@ -24,10 +24,11 @@ General Audio Structure and Naming Convention
 2. 具体的表现形式决定了代码实现的方式，所以在进行实际代码工作前需要想清楚具体的表现效果
 3. 大多数声音的触发其实只是一行代码，因此在功能需求大致完成之后再实现表现是合理的（可能这也是为什么声音需求优先级不太高的原因）
 
-The Ultimate Goal of Game Audio Design and Film Sound Design with different path  
+The Same Goal of Game Audio Design and Film Sound Design in different path  
 学校教育仍然停留在传统的声音设计思路上，并没有讲清楚游戏音频的设计思路特殊性在哪里  
 先说浅显易懂的非线性和交互性  
 这几年去学校讲课 intro，经常要说到游戏音频设计与传统声音设计的不同之处，常说的几点就是非线性、交互性等之类的，但这些只是实现手段上的不同而已，从观众或玩家的角度来看，最终想要达到的目的其实是一致的  
+游戏和影视本都属于视觉媒体声音设计范畴  
 从空间上/最终要实现的效果上考虑……  
 游戏音频设计与影视声音设计的殊途同归，一个在 DAW，一个在引擎
 为什么 Dolby Atmos  
