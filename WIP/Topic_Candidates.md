@@ -34,7 +34,12 @@ The Same Goal of Game Audio Design and Film Sound Design in different path
 为什么 Dolby Atmos  
 Channel-Based 声音设计逻辑终将淘汰，Object-Based 声音设计逻辑才是未来  
 
+影视在做的事，从制作环节引入 Spatial Audio，Dolby Atmos，不断脱离 Channel-Based 的限制……  
+而游戏做的则是在迁就 Channel-Based……
+
 殊途同归的现实举例就是 VR，论文
 用VR游戏和VR影视距离，基于引擎和基于DAW的制作方式，都是为了实现同样的目的，更全面的沉浸感
+
+现在是否是好时机，消费级支持 Spatial Audio 的产品越来越多……
 
 声音素材还是基于 Channel 的，怎么解
