@@ -37,6 +37,8 @@ Channel-Based 声音设计逻辑终将淘汰，Object-Based 声音设计逻辑�
 影视在做的事，从制作环节引入 Spatial Audio，Dolby Atmos，不断脱离 Channel-Based 的限制……  
 而游戏做的则是在迁就 Channel-Based……
 
+结合游戏引擎的电影制作方式……现场同期/动捕现场，Object-Based Sound Capture
+
 殊途同归的现实举例就是 VR，论文
 用VR游戏和VR影视距离，基于引擎和基于DAW的制作方式，都是为了实现同样的目的，更全面的沉浸感
 
