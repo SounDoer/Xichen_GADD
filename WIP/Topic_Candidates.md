@@ -24,6 +24,7 @@ General Audio Structure and Naming Convention
 2. 具体的表现形式决定了代码实现的方式，所以在进行实际代码工作前需要想清楚具体的表现效果
 3. 大多数声音的触发其实只是一行代码，因此在功能需求大致完成之后再实现表现是合理的（可能这也是为什么声音需求优先级不太高的原因）
 
+
 The Same Goal of Game Audio Design and Film Sound Design in different path  
 学校教育仍然停留在传统的声音设计思路上，并没有讲清楚游戏音频的设计思路特殊性在哪里  
 先说浅显易懂的非线性和交互性  
