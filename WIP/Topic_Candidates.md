@@ -5,8 +5,10 @@ Make Far Cry 6 CD Disc Gun with Unreal Engine 5 MetaSounds
 Ambience Sound Design  
 Location-Based or Player-Centered
 
-From Channel-Based To Object-Based  
+The DAW in Unreal Engine
 Cinematic Sound Implementation and Mixing with Level Sequence in UE
+
+Sound Puzzle with UE5 MetaSound
 
 Why no sound?!
 
