@@ -12,10 +12,12 @@ Audiokinetic Wwise 2021.1.0
 
 首先，有必要明确一下本文所指的 Procedural 这一概念。正如[《展望游戏音频设计的发展方向》](https://soundoer.github.io/Xichen_GADD/What-will-The-Next-Gen-of-Game-Audio-Design-be-like.html)一文中“程序化音频”章节内提到的，程序化音频的思考重点是物体为什么发声和怎么样发声，而不是简单地只考虑具体的声音表现。以相对宽泛的尺度去考量，其实目前游戏音频设计中许多基于素材并结合动态参数的设计范式都可以被称为是 Procedural 的，两个典型的例子就是汽车引擎和枪械射击。例如，汽车引擎声音的实现特点是有许多如转速之类的动态参数时刻控制着持续性声音的属性变化，枪械射击声音的实现特点则是从枪械发声部位、频段和距离等方面入手准备各个层次的声音素材。而本文所说的 Procedural Whoosh 实现也是基于这类范式的，与汽车引擎的声音实现非常相似，对光标移动轨迹进行实时分析来获取速度、加速度和方向等之类的动态参数，用于控制 Whoosh 各个层次的声音素材的属性变化和混合过渡。
 
+### Deconstruct Whoosh Sound
+
+
 ### Calculate Control Parameters
 
-在确定上述设计思路之后，首先来实现相对明确的程序部分，即从光标移动轨迹入手，计算出可以用来描述光标运动特征的各种属性，也就是用于控制声音的各种动态参数。  
-从获取光标屏幕位置开始，通过简单的算术和物理公式就可以依次计算出光标的方向角度、速度、加速度和加速度变化速率。
+即从光标移动轨迹入手，计算出可以用来描述光标运动特征的各种属性，也就是用于控制声音的各种动态参数。从获取光标屏幕位置开始，通过简单的算术和物理公式就可以依次计算出光标的模拟位置、方向角度、速度、加速度和加速度变化速率。
 
 ```
 void UAbilityComponent::CalculateCursorPosition(float DeltaSecond)
@@ -26,6 +28,7 @@ void UAbilityComponent::CalculateCursorPosition(float DeltaSecond)
 	CursorPosition = FVector2D(InterpMousePositionX, InterpMousePositionY);
 }
 ```
+对光标屏幕位置做插值平滑处理来得到其模拟位置，并通过 InterpSpeed 数值来控制处理速度，速度越快，模拟位置跟随得就越快，感觉就越跟手。因此，此数值可以进一步与冷兵器重量相关联，用于不同重量下的惯性表现。
 
 ```
 void UAbilityComponent::CalculateCursorDirection(float DeltaSecond)
@@ -48,6 +51,7 @@ void UAbilityComponent::CalculateCursorDirection(float DeltaSecond)
 	}
 }
 ```
+对光标在平面上的单位向量进行计算，将其转换为一维的圆心角角度，并规定0度是X轴的正轴方向。
 
 ```
 void UAbilityComponent::CalculateCursorVelocity(float DeltaSecond)
@@ -59,6 +63,7 @@ void UAbilityComponent::CalculateCursorVelocity(float DeltaSecond)
 	CursorVelocity = FMath::GetMappedRangeValueClamped(CursorVelocityClampRange, FVector2D(0, 100), CurrentCursorVelocity);
 }
 ```
+计算速度并标准化成范围为0至100的参数。
 
 ```
 void UAbilityComponent::CalculateCursorAcceleration(float DeltaSecond)
@@ -70,6 +75,7 @@ void UAbilityComponent::CalculateCursorAcceleration(float DeltaSecond)
 	CursorAcceleration = FMath::GetMappedRangeValueClamped(CursorAccelerationClampRange, FVector2D(-10, 10), CurrentCursorAcceleration);
 }
 ```
+计算加速度并标准化成范围为-10至10的参数。
 
 ```
 void UAbilityComponent::CalculateCursorAccelSlewRate(float DeltaSecond)
@@ -81,6 +87,7 @@ void UAbilityComponent::CalculateCursorAccelSlewRate(float DeltaSecond)
 	CursorAccelSlewRate = FMath::GetMappedRangeValueClamped(CursorAccelSlewRateClampRange, FVector2D(0, 1), CurrentCursorAccelSlewRate);
 }
 ```
+计算加速度变化速率并标准化成范围为0至1的参数。此数值主要用于表征光标是否快速来回移动。
 
 
 
