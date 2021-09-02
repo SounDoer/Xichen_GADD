@@ -12,7 +12,7 @@ Audiokinetic Wwise 2021.1.0
 
 首先，有必要明确一下本文所指的 Procedural 这一概念。正如[《展望游戏音频设计的发展方向》](https://soundoer.github.io/Xichen_GADD/What-will-The-Next-Gen-of-Game-Audio-Design-be-like.html)一文中“程序化音频”章节内提到的，程序化音频的思考重点是物体为什么发声和怎么样发声，而不是简单地只考虑具体的声音表现。以相对宽泛的尺度去考量，其实目前游戏音频设计中许多基于素材并结合动态参数的设计范式都可以被称为是 Procedural 的，两个典型的例子就是汽车引擎和枪械射击。例如，汽车引擎声音的实现特点是有许多如转速之类的动态参数时刻控制着持续性声音的属性变化，枪械射击声音的实现特点则是从枪械发声部位、频段和距离等方面入手准备各个层次的声音素材。而本文所说的 Procedural Whoosh 实现也是基于这类范式的，与汽车引擎的声音实现非常相似，对光标移动轨迹进行实时分析来获取速度、加速度和方向等之类的动态参数，用于控制 Whoosh 各个层次的声音素材的属性变化和混合过渡。
 
-### Deconstruct Whoosh Sound
+### Deconstruct Sound Assets
 
 
 ### Calculate Control Parameters
@@ -88,6 +88,8 @@ void UAbilityComponent::CalculateCursorAccelSlewRate(float DeltaSecond)
 }
 ```
 计算加速度变化速率并标准化成范围为0至1的参数。此数值主要用于表征光标是否快速来回移动。
+
+### Define Modeling Rules
 
 
 
