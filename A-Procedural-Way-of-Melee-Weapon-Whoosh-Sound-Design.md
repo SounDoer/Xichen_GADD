@@ -35,8 +35,10 @@ Whoosh 声音的主体部分，能量在频段上的不同分布能够明显体�
 
 ### Calculate Control Parameters
 
-即从光标移动轨迹入手，计算出可以用来描述光标运动特征的各种属性，也就是用于控制声音的各种动态参数。从获取光标屏幕位置开始，通过简单的算术和物理公式就可以依次计算出光标的模拟位置、方向角度、速度、加速度和加速度变化速率。
+有了素材资源之后，下一步就是从光标移动轨迹入手，计算出可以用来描述光标运动特征的各种属性，也就是用于控制声音的各种动态参数。从获取光标屏幕位置开始，通过简单的算术和物理公式就可以依次计算出光标的模拟位置、方向角度、速度、加速度和加速度变化速率。
 
+* **Position**  
+对光标屏幕位置做插值平滑处理来得到其模拟位置，并通过 InterpSpeed 数值来控制处理速度，速度越快，模拟位置跟随得就越快，感觉就越跟手。另外，此数值可以进一步与冷兵器重量相关联，用于不同重量下的惯性表现。
 ```
 void UAbilityComponent::CalculateCursorPosition(float DeltaSecond)
 {
@@ -46,8 +48,9 @@ void UAbilityComponent::CalculateCursorPosition(float DeltaSecond)
 	CursorPosition = FVector2D(InterpMousePositionX, InterpMousePositionY);
 }
 ```
-对光标屏幕位置做插值平滑处理来得到其模拟位置，并通过 InterpSpeed 数值来控制处理速度，速度越快，模拟位置跟随得就越快，感觉就越跟手。因此，此数值可以进一步与冷兵器重量相关联，用于不同重量下的惯性表现。
 
+* **Direction Angle**  
+对光标在平面上移动时的单位向量进行计算，将其转换为一维的圆心角角度，并规定0度是X轴的正轴方向。
 ```
 void UAbilityComponent::CalculateCursorDirection(float DeltaSecond)
 {
@@ -69,8 +72,9 @@ void UAbilityComponent::CalculateCursorDirection(float DeltaSecond)
 	}
 }
 ```
-对光标在平面上的单位向量进行计算，将其转换为一维的圆心角角度，并规定0度是X轴的正轴方向。
 
+* **Velocity**  
+计算速度并标准化成范围为0至100的参数。
 ```
 void UAbilityComponent::CalculateCursorVelocity(float DeltaSecond)
 {
@@ -81,8 +85,9 @@ void UAbilityComponent::CalculateCursorVelocity(float DeltaSecond)
 	CursorVelocity = FMath::GetMappedRangeValueClamped(CursorVelocityClampRange, FVector2D(0, 100), CurrentCursorVelocity);
 }
 ```
-计算速度并标准化成范围为0至100的参数。
 
+* **Acceleration**  
+计算加速度并标准化成范围为-10至10的参数。
 ```
 void UAbilityComponent::CalculateCursorAcceleration(float DeltaSecond)
 {
@@ -93,8 +98,9 @@ void UAbilityComponent::CalculateCursorAcceleration(float DeltaSecond)
 	CursorAcceleration = FMath::GetMappedRangeValueClamped(CursorAccelerationClampRange, FVector2D(-10, 10), CurrentCursorAcceleration);
 }
 ```
-计算加速度并标准化成范围为-10至10的参数。
 
+* **Accel Slew Rate**  
+计算加速度变化速率并标准化成范围为0至1的参数。此数值主要用于表征光标是否快速来回移动。
 ```
 void UAbilityComponent::CalculateCursorAccelSlewRate(float DeltaSecond)
 {
@@ -105,10 +111,11 @@ void UAbilityComponent::CalculateCursorAccelSlewRate(float DeltaSecond)
 	CursorAccelSlewRate = FMath::GetMappedRangeValueClamped(CursorAccelSlewRateClampRange, FVector2D(0, 1), CurrentCursorAccelSlewRate);
 }
 ```
-计算加速度变化速率并标准化成范围为0至1的参数。此数值主要用于表征光标是否快速来回移动。
 
 ### Define Modeling Rules
 
+
+### Conclusion
 
 
 希辰  
