@@ -114,13 +114,34 @@ void UAbilityComponent::CalculateCursorAccelSlewRate(float DeltaSecond)
 }
 ```
 
+然后通过 SetRTPCValue 将上述 Direction Angle、Velocity、Acceleration 和 Accel Slew Rate 四个一维参数分别同时映射到四条素材层次上，即总共会有16条 RTPC 可供使用。
+
+另外值得一提的是，为了模拟冷兵器在真实空间中的移动效果，还可以通过反投影的方式把二维的 Cursor Position 转换为三维的 Cursor Location，并用此数值来实时更新发声点位置。
+
+```
+FVector UAbilityComponent::ScreenPositionToWorldLocation(FVector2D ScreenPosition)
+{
+	FVector WorldLocation;
+	FVector WorldDirection;
+	PlayerController->DeprojectScreenPositionToWorld(ScreenPosition.X, ScreenPosition.Y, WorldLocation, WorldDirection);
+
+	FVector ActualWorldLocation = FVector(WorldLocation.X * PositionToWorldXYMultiplier, WorldLocation.Y * PositionToWorldXYMultiplier, PositionToWorldZOffset);
+	return ActualWorldLocation;
+}
+```
+
 ### Define Modeling Rules
+
+素材资源和控制参数都准备好之后，接下来就是在音频中间件 Wwise 中将两者关联起来，重构 Whoosh 声音的发声规则，主要是从以下两个方面入手。
+
+一是 RTPC 自身对控制参数的响应。通过 Slew Rate 和 Filtering Over Time 两个 Interpolation 模式以及其中 Attack 和 Release 数值的调整，可以
 
 ![Game Parameters & Asset Layers](media/ProceduralWhoosh_DefineModelingRules_01.png)
 
 ![RTPCs](media/ProceduralWhoosh_DefineModelingRules_02.png)
 
-![Final Results](media/ProceduralWhoosh_DefineModelingRules_03.png)
+
+
 
 ### Conclusion
 
