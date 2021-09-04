@@ -134,16 +134,20 @@ FVector UAbilityComponent::ScreenPositionToWorldLocation(FVector2D ScreenPositio
 
 素材资源和控制参数都准备好之后，接下来就是在音频中间件 Wwise 中将两者关联起来，重构 Whoosh 声音的发声规则，主要是从以下两个方面入手。
 
-一是 RTPC 自身对控制参数的响应。通过 Slew Rate 和 Filtering Over Time 两个 Interpolation 模式以及其中 Attack 和 Release 数值的调整，可以
+一是 RTPC 自身对控制参数的响应。通过 Slew Rate 和 Filtering Over Time 两个 Interpolation 模式以及其中 Attack 和 Release 数值的调整，可以让各个素材的同类 RTPC 对同一个控制参数有着不同的响应表现，也就是影响了各个声音层次的 Envelope。比如，Metallic 层次 Velocity RTPC 有着较小的 Attack 和 Release 数值，可以让这层声音出现得比较慢且持续稍长一些。
 
 ![Game Parameters & Asset Layers](media/ProceduralWhoosh_DefineModelingRules_01.png)
 
+二是 RTPC 对素材属性的控制。比如，Velocity 可以与 Volume 相关联，作为声音起止的主要控制参数；Direction Angle 和 Acceleration 可以与 Pitch 相关联，小幅度地调整音调产生变化感。另外还可以用来调控效果插件的参数，实现更多丰富的动态效果。比如，Metallic 层次的 Accel Slew Rate 与 Tremolo 效果器中的 Depth 和 Frequency 相关联，就可以模拟冷兵器小幅快速来回晃动时金属震颤的质感。
+
 ![RTPCs](media/ProceduralWhoosh_DefineModelingRules_02.png)
 
-
+最终效果见视频演示。
 
 
 ### Conclusion
+
+实际测试表明，虽然最终效果还没有达到理想中传统素材的程度，但对解决此类无法依赖逐帧动画的音频设计需求时，本文采用抽象物理参数控制分层素材资源的 Procedural Whoosh 实现方式是可行的。
 
 
 希辰  
