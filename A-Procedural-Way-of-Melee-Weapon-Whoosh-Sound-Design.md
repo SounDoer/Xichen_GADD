@@ -114,7 +114,7 @@ void UAbilityComponent::CalculateCursorAccelSlewRate(float DeltaSecond)
 }
 ```
 
-然后通过 SetRTPCValue 将上述 Direction Angle、Velocity、Acceleration 和 Accel Slew Rate 四个一维参数分别同时映射到四条素材层次上，即总共会有16条 RTPC 可供使用。
+之后，通过 SetRTPCValue 将上述 Direction Angle、Velocity、Acceleration 和 Accel Slew Rate 四个一维参数分别同时映射到四条素材层次上，即总共会有16条 RTPC 可供使用。
 
 另外值得一提的是，为了模拟冷兵器在真实空间中的移动效果，还可以通过反投影的方式把二维的 Cursor Position 转换为三维的 Cursor Location，并用此数值来实时更新发声点位置。
 
@@ -147,8 +147,8 @@ FVector UAbilityComponent::ScreenPositionToWorldLocation(FVector2D ScreenPositio
 
 ### Conclusion
 
-实际测试表明，虽然最终效果还没有达到理想中传统素材的程度，但对解决此类无法依赖逐帧动画的音频设计需求时，本文采用抽象物理参数控制分层素材资源的 Procedural Whoosh 实现方式是可行的。
-
+实际测试表明，虽然最终效果还没有达到理想中传统素材的程度，但对解决此类无法依赖逐帧动画的音频设计需求时，本文采用抽象物理参数控制分层素材资源的 Procedural Whoosh 实现方式是可行的。  
+为了追求更好的表现力效果，以上实现方式在现有基础上仍有很大的扩展空间。本文仅使用单点光标作为模拟对象，可供使用的物理参数比较有限，如果使用带有陀螺仪等更精密控制的输入设备，或者对角色 Skeleton Mesh 的多个锚点进行综合计算并提取参数，那么就能有更多相关联的控制参数可供使用。当然，更多的控制参数并不一定意味着更好的效果，毕竟这与物理模拟不同，最重要的还是提取有限的关键参数来更准确直接地控制素材资源。因此相较而言，更符合声音设计逻辑的改进方式就是，从横向和纵向进一步地区分和提升素材本身的表现力。比如，根据 Velocity 数值将 Swish 层次拆分成低中高三个素材的混合，或者是准备更多的具有不同基频和谐波成分的 Metallic 层次进行叠加。总而言之，目前绝大多数的游戏音频设计实践中，在有了成熟可行的实现机制之后，最终呈现效果的优劣还是会回归到声音素材本身的质量高低上。
 
 希辰  
 2021.8.26
