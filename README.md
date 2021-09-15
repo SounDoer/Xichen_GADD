@@ -1,7 +1,3 @@
-### 希辰的游戏音频设计文档
-
-**Xichen's Game Audio Design Document**
-
 以专题文章的形式分享我对游戏音频设计的严肃思考，持续更新中。
 
 * [前言](Preface.md)
