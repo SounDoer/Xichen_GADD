@@ -12,11 +12,11 @@ Audiokinetic Wwise 2021.1.0
 
 首先，有必要明确一下本文所指的 Procedural 这一概念。正如[《展望游戏音频设计的发展方向》](https://soundoer.github.io/Xichen_GADD/What-will-The-Next-Gen-of-Game-Audio-Design-be-like.html)一文中“程序化音频”章节内提到的，程序化音频的思考重点是物体为什么发声和怎么样发声，而不是简单地只考虑具体的声音表现。以相对宽泛的尺度去考量，其实目前游戏音频设计中许多基于素材并结合动态参数的设计范式都可以被称为是 Procedural 的，两个典型的例子就是汽车引擎和枪械射击。例如，汽车引擎声音的实现特点是有许多如转速之类的动态参数时刻控制着持续性声音的属性变化，枪械射击声音的实现特点则是从枪械发声部位、频段和距离等方面入手准备各个层次的声音素材。**而本文所说的 Procedural Whoosh 实现也是基于这类范式的，与汽车引擎的声音实现非常相似，对光标移动轨迹进行实时分析来获取速度、加速度和方向等之类的动态参数，用于控制 Whoosh 各个层次的声音素材的属性变化和混合过渡。**
 
+![Procedural Whoosh Sound](media/ProceduralWhoosh_Flow.png)
+
 ### Deconstruct Sound Assets
 
 冷兵器形态各异种类繁多，长度、材质和使用方式等因素都会直接影响 Whoosh 的声音表现，最终的呈现效果也会有很大程度的夸张和艺术化处理，因此可以对经过设计的 Whoosh 素材资源进行解构，分析其中包含的声音层次，并在此基础上准备相应的素材资源。
-
-![Deconstruct Sound Assets](media/ProceduralWhoosh_DeconstructSoundAssets.png)
 
 在试听大量成品素材并配合 Spectrogram 分析之后，大致可以得出规律，即一个经过设计的 Whoosh 声音可以看作是由四个部分组成的：
 
@@ -28,6 +28,8 @@ Whoosh 声音的主体部分，能量在频段上的不同分布能够明显体�
 覆盖较宽频段的噪声部分，主要表现高频的嘶嘶声，还可以提供类似粘合剂的作用，顺滑地混合各个频段的声音。
 * **Metallic**  
 带有金属质感的高频部分，其中明显的基频与谐波成分体现了由金属材质带来的锋利感。
+
+![Deconstruct Sound Assets](media/ProceduralWhoosh_DeconstructSoundAssets.png)
 
 在频域上区分出层次之后就可以通过 Granular Synth 等方式，从已固定成型的单个 Whoosh 资源里提取并合成出频段成分稳定、长时可循环的素材了。
 
