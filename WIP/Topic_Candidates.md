@@ -16,8 +16,6 @@ Why no sound?!
 
 I/O Streaming
 
-Sound Smooth Stop at Level Change
-
 General Audio Structure and Naming Convention
 
 
