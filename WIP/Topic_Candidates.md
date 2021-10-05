@@ -14,8 +14,6 @@ Sound Puzzle with UE5 MetaSound
 
 Why no sound?!
 
-I/O Streaming
-
 General Audio Structure and Naming Convention
 
 
