@@ -1,3 +1,9 @@
+---
+layout: default
+title: Xichen's Vlog
+nav_exclude: true
+---
+
 # Xichen's Game Audio Design Document
 ## 希辰的游戏音频设计文档
 
