@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Xichen's Vlog
+title: Xichen's Game Audio Design Document
 nav_exclude: true
 permalink: /
 ---
