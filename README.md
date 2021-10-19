@@ -2,6 +2,7 @@
 layout: default
 title: Xichen's Vlog
 nav_exclude: true
+permalink: /
 ---
 
 # Xichen's Game Audio Design Document
