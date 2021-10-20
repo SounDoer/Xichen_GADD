@@ -1,3 +1,8 @@
+---
+layout: default
+nav_exclude: true
+---
+
 # “音乐作为关卡设计” UE & Wwise 实践案例
 
 ---
