@@ -1,6 +1,25 @@
+---
+layout: default
+nav_exclude: true
+---
+
 # 冷兵器 Procedural Whoosh 音频设计案例
 
-### Why Procedural?
+***
+
+<!-- Start Document Outline -->
+
+* [Why Procedural?](#why-procedural)
+* [Deconstruct Sound Assets](#deconstruct-sound-assets)
+* [Calculate Control Parameters](#calculate-control-parameters)
+* [Define Modeling Rules](#define-modeling-rules)
+* [Conclusion](#conclusion)
+
+<!-- End Document Outline -->
+
+***
+
+## Why Procedural?
 
 目前绝大多数游戏中人物角色使用冷兵器的动作表现，几乎都是基于大量逐帧动画资源并通过不同状态来驱动切换和过渡的方式来实现的，因此冷兵器各种挥动动作的声音资源也通常是依据逐帧动画的内容来制作的，然后以与动画资源强绑定的方式来触发的。这样的设计方式能最大程度地保证动作和声音的一致性，以及声音细节表现的可塑性。  
 但如果有一款游戏中允许玩家通过鼠标、手柄或者体感设备来直接高自由度地控制冷兵器的挥动，那么上述基于逐帧动画来设计声音的方式就行不通了。声音资源无法依赖确定的动画表现来制作，而是通过玩家输入的动态参数来实时生成与变化的，因此需要用一种更为 Procedural 的方式来实现相应的音频设计需求。本文将使用游戏引擎 Unreal Engine 和音频中间件 Wwise，以光标移动代表冷兵器挥动的抽象方式进行模拟，展开详述整个实现过程，分析并总结目前阶段性测试的利弊与局限。
@@ -14,7 +33,7 @@ Audiokinetic Wwise 2021.1.0
 
 ![Procedural Whoosh Sound](media/ProceduralWhoosh_Flow.png)
 
-### Deconstruct Sound Assets
+## Deconstruct Sound Assets
 
 冷兵器形态各异种类繁多，长度、材质和使用方式等因素都会直接影响 Whoosh 的声音表现，最终的呈现效果也会有很大程度的夸张和艺术化处理，因此可以对经过设计的 Whoosh 素材资源进行解构，分析其中包含的声音层次，并在此基础上准备相应的素材资源。
 
@@ -35,7 +54,7 @@ Whoosh 声音的主体部分，能量在频段上的不同分布能够明显体�
 
 除此之外，各个层次在时域上也有着明显的特征，比如 Swish 持续时间较长和 Metallic 主要集中在后半段等，此类有关起止时刻和持续时间的特征也都需要在后续的实现中体现出来，也是进一步风格化设计的重要参考。
 
-### Calculate Control Parameters
+## Calculate Control Parameters
 
 有了素材资源之后，下一步就是从光标移动轨迹入手，计算出可以用来描述光标运动特征的各种属性，也就是用于控制声音的各种动态参数。从获取光标屏幕位置开始，通过基本的算术和物理公式就可以依次计算出光标的模拟位置、方向角度、速度、加速度和加速度变化速率。
 
@@ -132,7 +151,7 @@ FVector UAbilityComponent::ScreenPositionToWorldLocation(FVector2D ScreenPositio
 }
 ```
 
-### Define Modeling Rules
+## Define Modeling Rules
 
 素材资源和控制参数都准备好之后，接下来就是在音频中间件 Wwise 中将两者关联起来，重构 Whoosh 声音的发声规则，主要是从以下两个方面入手。
 
@@ -144,7 +163,7 @@ FVector UAbilityComponent::ScreenPositionToWorldLocation(FVector2D ScreenPositio
 
 ![RTPCs](media/ProceduralWhoosh_DefineModelingRules_02.png)
 
-### Conclusion
+## Conclusion
 
 最终效果见[视频演示](https://www.youtube.com/watch?v=-3CB0Qn7bW0)。
 
@@ -154,4 +173,4 @@ FVector UAbilityComponent::ScreenPositionToWorldLocation(FVector2D ScreenPositio
 希辰  
 2021.8.26
 
----
+***
