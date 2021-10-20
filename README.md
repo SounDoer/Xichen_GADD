@@ -8,6 +8,8 @@ permalink: /
 # Xichen's Game Audio Design Document
 ## 希辰的游戏音频设计文档
 
+***
+
 以专题文章的形式分享我对游戏音频设计的严肃思考，持续更新中。
 
 * [前言](Preface.md)
@@ -21,7 +23,7 @@ permalink: /
 * [“音频可视化” UE & Wwise 实践案例](A-Practice-of-Audio-Visualization-with-UE-Wwise.md)
 * [WIP](A-Procedural-Way-of-Melee-Weapon-Whoosh-Sound-Design.md)
 
----
+***
 
 Xichen Shen
 
@@ -37,4 +39,4 @@ Far Cry New Dawn
 
 Contact: xichen@soundoer.com
 
----
+***
