@@ -1,3 +1,8 @@
+---
+layout: default
+nav_exclude: true
+---
+
 # Topic Candidates
 
 Make Far Cry 6 CD Disc Gun with Unreal Engine 5 MetaSounds
