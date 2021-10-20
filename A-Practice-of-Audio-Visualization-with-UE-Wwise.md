@@ -1,4 +1,24 @@
+---
+layout: default
+nav_exclude: true
+---
+
 # “音频可视化” UE & Wwise 实践案例
+
+---
+
+<!-- Start Document Outline -->
+
+* [音频可视化的元素](#音频可视化的元素)
+* [结合现有工具的实现思路](#结合现有工具的实现思路)
+* [时域：声音包络（Envelope）](#时域声音包络envelope)
+* [频域：声音频谱（Spectrum）](#频域声音频谱spectrum)
+* [时域与频域：声音时频谱（Spectrogram）](#时域与频域声音时频谱spectrogram)
+* [总结](#总结)
+
+<!-- End Document Outline -->
+
+---
 
 继上一篇文章[《“音乐作为关卡设计” UE & Wwise 实践案例》](A-Practice-of-Music-as-Level-Design-with-UE-Wwise.md)中运用音乐中的标记信息来触发游戏事件之后，我想在个人练习项目里想实现的下一个功能是用音乐中的信息来驱动视觉效果的表现，也就是通常说的音频可视化（Audio Visualization）。  
 音频可视化本身是一个大课题，在数字艺术和现场表演等领域已经有了成熟的工具和艺术表达。本文不讨论艺术方面的表现效果，也不深究音频信号的数理定义，仅从基本概念入手，结合引擎工具 Unreal Engine 和音频中间件 Wwise 已有的功能，来实现一些基本的音频可视化效果。
@@ -9,7 +29,7 @@ Unreal Engine 4.26 C++ & Blueprint
 Audiokinetic Wwise 2021.1.0
 ```
 
-### 音频可视化的元素
+## 音频可视化的元素
 
 对于数字音频信号的分析，通常可以从**时域**（Time Domain）和**频域**（Frequency Domain）两个方面入手，相关的分析工具和表现形式在各类播放器和音频工具中其实都很常见。
 
@@ -27,7 +47,7 @@ Audiokinetic Wwise 2021.1.0
 
 下文将以实现上述三种可视化效果来展开。
 
-### 结合现有工具的实现思路
+## 结合现有工具的实现思路
 
 由于项目已有的音频功能都是基于中间件 Wwise 的，音频可视化的实现也需要统一在同一框架下，因此具体的实现方式也多了一些限制和要求：  
 1. 由于编程水平有限，尽量不考虑自己修改或重写代码的方式来实现；  
@@ -38,7 +58,7 @@ Audiokinetic Wwise 2021.1.0
 
 所以，一种可行的实现思路是，利用 UE 引擎中的功能对声音文件进行分析并存储相应的数据，然后通过 Wwise 控制声音的播放并调用对应时刻的信息。
 
-### 时域：声音包络（Envelope）
+## 时域：声音包络（Envelope）
 
 首先从相对简单的 Envelope 入手。从数据类型来看，音频信号在时域上的瞬时值可以理解为是一个随时间快速变化的浮点数变量，可以直接用来驱动视觉元素的各种参数；更进一步，可以将一段时间内的变量数值先存储进数组，然后用数组来驱动视觉元素的变化，这样就能表现出音频信号在一段时间内的 Envelope 形态。
 
@@ -54,7 +74,7 @@ Envelope 效果如下动图。
 
 ![Audio Visualization Envelope Demo](media/AudioVisualization_Envelope_Demo.gif)
 
-### 频域：声音频谱（Spectrum）
+## 频域：声音频谱（Spectrum）
 
 从数据类型来看，音频信号在某一时刻的频谱信息可以理解为是一个浮点数数组，数组长度代表了频率范围，而其中各个位置上的数值可以看作是时域瞬时值在频域上的展开。用该数组驱动视觉元素的变化并不断更新，就可以表现音频信号的 Spectrum 形态。
 
@@ -77,7 +97,7 @@ Spectrum 效果如下动图。
 
 ![Audio Visualization Spectrum Demo](media/AudioVisualization_Spectrum_Demo.gif)
 
-### 时域与频域：声音时频谱（Spectrogram）
+## 时域与频域：声音时频谱（Spectrogram）
 
 在实现了 Envelope 和 Spectrum 之后，再来理解 Spectrogram 就简单多了。Spectrogram 可以看作是由 Envelope 和 Spectrum 两者构成的一个二维数组，或者形象地来看就是一个二维矩阵，其中 Envelope 一轴表示的是时域，Spectrum 表示的则是频域。
 
@@ -100,12 +120,12 @@ Spectrogram 效果如下动图。
 
 ![Audio Visualization Spectrogram Demo](media/AudioVisualization_Spectrogram_Demo.gif)
 
-### 总结
+## 总结
 
 上述方法只是在文章开头提出的要求与限制下取巧地实现了音频可视化的功能，从各个方面来评判都算不上是最优解。一个显而易见的问题就是，同一个音频文件需要在引擎和中间件中分别导入，一份用于数据分析，一份用于播放控制，如果文件数量很多的话，就会造成存储资源的浪费。  
 所以，如果没有需要配合中间件的要求，大可以直接使用 UE 引擎的原生功能来实现简单的音频可视化功能；当然理想情况是，Wwise 自身能有更多音频分析相关的功能和与引擎进行数据通信的方式。
 
-### Reference
+## Reference
 
 [Unreal Engine Blueprint API Reference - Audio Component](https://docs.unrealengine.com/en-US/BlueprintAPI/Audio/Components/Audio/index.html)  
 [Unreal Engine Blueprint API Reference - Audio Analysis](https://docs.unrealengine.com/en-US/BlueprintAPI/Audio/Analysis/index.html)  
