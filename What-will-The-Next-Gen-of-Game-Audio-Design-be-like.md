@@ -1,9 +1,28 @@
+---
+layout: default
+nav_exclude: true
+---
+
 # 展望游戏音频设计的发展方向
+
+---
+
+<!-- Start Document Outline -->
+
+* [游戏音频设计的现状](#游戏音频设计的现状)
+* [程序化音频（Procedural Audio）](#程序化音频procedural-audio)
+* [声学环境建模（Acoustic Environment Modeling）](#声学环境建模acoustic-environment-modeling)
+* [空间声与双耳声音频（Ambisonics &amp; Binaural Audio）](#空间声与双耳声音频ambisonics--binaural-audio)
+* [再创造，而非纯模拟（Recreation，Not Simulation）](#再创造而非纯模拟recreationnot-simulation)
+
+<!-- End Document Outline -->
+
+---
 
 今年年中的时候，与朋友做了一期名为[《2020了，游戏还能给我们带来什么》](https://m.ximalaya.com/yule/40134221/319415380)的播客节目，作为一个坚定的技术派，我在其中表达了一个观点，新体验的产生很大程度上依赖于硬件性能的提升和开发工具的进化。如果把问题具体到游戏音频设计，我认为值得展开讨论的话题就是，基于硬件软件不断发展的前提下，游戏音频设计自身会发生哪些变化，从业者在开发流程中会运用哪些新的方法，玩家在游戏过程中能获得哪些新的体验。  
 最初在列文章大纲时起的英文标题是“What will The Next Gen of Game Audio Design be like”，这是一个疑问句，对此我并没有清晰明确的答案，所以说我只能是结合实际工作中遇到的痛点，来聊一聊游戏音频设计在设计思路、开发工具和终端体验等各个环节上还有哪些可以改进的地方。译成中文的话，就高大上一点地叫“展望游戏音频设计的发展方向”吧。
 
-### 游戏音频设计的现状
+## 游戏音频设计的现状
 
 ![The Improvement of Hardware Performance](media/TheImprovementOfHardwarePerformance.jpg)
 
@@ -19,7 +38,7 @@
 
 以上，就是从硬件性能和开发流程这两个角度入手，简单阐述了一下游戏音频设计的现状是怎样的。接下来我将以三个在实际项目中遇到的例子，来聊一聊游戏音频设计目前尚存的一些问题，以及可行的改进方案。
 
-### 程序化音频（Procedural Audio）
+## 程序化音频（Procedural Audio）
 
 在第三人称射击游戏类型中，玩家能够清楚地观察到整个角色的各种行为，因此角色在动作表现上的细节就显得尤为重要，特别对于写实风格的游戏来说更是如此。针对此类角色动画的开发需求，目前常见的做法是基于骨骼动画（Skeleton Animation）和关键帧动画（Keyframe Animation）的。以 Unreal Engine 为例，首先根据角色表现进行细致的行为分类，比如基础的 Idle、Turn、Walk、Run 以及各种行为之间起停和过渡等行为，通过动作捕捉（Motion Capture）的方式采集原始动作素材并制作出大量的动画序列（Animation Sequence），再在游戏引擎中运用混合空间（Blend Space）和状态机（State Machine）等功能对动画序列进行整合，实现各种行为的触发和转换。在这样的开发工序下，角色衣服和脚步等 Foley 相关的声音一般是以动画通知（Animation Notify）的形式整合进动画序列中，只要动画序列被触发，其中相应的声音就会被播放。
 
@@ -52,7 +71,7 @@
 5. 材质（Material）是游戏引擎中一个基础且重要的系统，目前在音频设计方面对其的应用还是比较简单和直接的，即一种材质映射一组包含若干随机变化的样本素材的声音，这也是脚步声的声音资源数量和结构复杂程度会随着材质种类的增加而成倍扩大的主要原因。如果引入程序化音频的设计思路，我们可以从材质的硬度、厚度和粗糙度等物理属性去分析，并结合物理建模声音合成的技术，这样就可以使用尽可能少的声音资源通过参数控制和排列组合的方式去实现尽可能多的材质声音表现。  
 6. 最后，从务实的角度来讨论一下为什么程序化音频还没有被大规模地运用在实际开发中。我认为可能的原因有二：一是，目前绝大多数游戏类型的开发规模和资源数量还是可控的，使用样本素材是最为直接有效且相对廉价的制作方式。受限于人员技术背景和人力成本等因素，游戏音频团队投入时间精力去从事程序化音频的基础研究或许不是一件划算的事情；二是，尽管学界可能在相关领域已经有了研究进展和成果，但由于缺少实际需求的驱动，因此还没有形成一个相对完整的解决方案。  
 
-### 声学环境建模（Acoustic Environment Modeling）
+## 声学环境建模（Acoustic Environment Modeling）
 
 在强竞技的写实风格射击游戏中，玩家对声音的关注点不仅仅是枪声听起来爽不爽，更会对枪械射击和人物动作等声音的空间感和方位感提出更高的要求，因为这些声音在符合物理常识和听觉习惯的情况下能够给玩家提供更多的战局信息。所以在游戏音频设计中，我们需要解决的一大问题就是如何在游戏世界中重建一个拟真的声学环境，让声音在其中传播时听起来真实可信。  
 声学环境建模本身就是学术研究中的一大方向，在建筑声学等领域已经有了非常多的研究成果和实际应用，我在这方面没有任何的研究经验，因此仅从游戏音频设计的角度来讨论一下目前常见的解决方案。
@@ -84,7 +103,7 @@ Microsoft 在2011年提出了一种叫做 [Wave Acoustics](https://www.microsoft
 目前此方案正式命名为 [Project Acoustics](https://docs.microsoft.com/en-us/gaming/acoustics/what-is-acoustics)，并已在《Gear of War》、《Sea of Thieves》和《Borderlands 3》等项目中经过验证，感兴趣的朋友可以前往官网查阅详情，或者直接试用 Unreal 或 Unity 整合方案。  
 限于本人研究深度有限，暂且不论 Room & Portal 和 Wave Acoustics 这两种方案孰优孰劣，至少作为一线工作者是非常乐于见到新技术的出现的，不断从实现效果和工作效率上带给我们新的可能。
 
-### 空间声与双耳声音频（Ambisonics & Binaural Audio）
+## 空间声与双耳声音频（Ambisonics & Binaural Audio）
 
 ![Sound Playback Methods](media/SoundPlaybackMethods.jpg)
 
@@ -105,7 +124,7 @@ Microsoft 在2011年提出了一种叫做 [Wave Acoustics](https://www.microsoft
 
 总之，耳机是目前普通消费者体验高质量声音表现最易获取的设备，针对耳机的声音重放体验肯定会受到越来越多的重视，因此在开发阶段专门针对耳机重放做特殊的声音定位和混音处理也是尤为必要的。
 
-### 再创造，而非纯模拟（Recreation，Not Simulation）
+## 再创造，而非纯模拟（Recreation，Not Simulation）
 
 上述三个例子分别从资源生成、声学建模和终端体验三个角度展开，讨论了游戏音频设计的发展方向和进展，也从都侧面反映了对技术进步的一致要求：设计工具更可控（Controllable），运算性能更快速（Fast），呈现效果更精确（Accurate）。这可能多少回答了开头的问题，What will the next gen of Game Audio Design be like，至少算是一个相对明确的技术要求。  
 上文通篇都是对技术本身的讨论，其重要性不言而喻，但是纯粹追求技术手段的发展更多属于科学研究的范畴，而游戏音频设计是技术与艺术的结合，技术手段要服务于艺术表达，游戏作品的好坏最终取决于玩家的体验和评价，而非技术手段的先进与否。  
