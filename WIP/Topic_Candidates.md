@@ -5,6 +5,12 @@ nav_exclude: true
 
 # Topic Candidates
 
+Directional Wind
+
+Physical Based Rendering Materials with Procedural Impact Sound
+
+Character Procedural Animation with Procedural Foley
+
 Make Far Cry 6 CD Disc Gun with Unreal Engine 5 MetaSounds
 
 Rythem Snake
