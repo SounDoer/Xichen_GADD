@@ -5,7 +5,7 @@ nav_exclude: true
 
 # Topic Candidates
 
-Directional Wind
+Directional Wind with Channel Based Assets
 
 Physical Based Rendering Materials with Procedural Impact Sound
 
