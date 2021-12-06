@@ -5,7 +5,9 @@ nav_exclude: true
 
 # Topic Candidates
 
-Directional Wind with Channel Based Assets
+Audio Settings in Game
+
+Spatial Audio Pipeline
 
 Physical Based Rendering Materials with Procedural Impact Sound
 
