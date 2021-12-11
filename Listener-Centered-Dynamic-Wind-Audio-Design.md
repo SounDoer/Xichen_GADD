@@ -30,30 +30,14 @@ Audiokinetic Wwise 2021.1.4
 
 ![Calculate Wind Gust Direction](media/DynamicWind_CalculateWindGustDirection.jpeg)
 
-一般来说风在水平方向上的运动比较直观可感，同时也是为了简化计算，暂且忽略风向在垂直方向 Z 轴上的变化，因此在计算 Gust Direction 的时候，只需计算在 XY 平面上的角度变化就可以了。如上俯视图所示，规定世界坐标系内 X 正轴方向(1, 0)为0度，顺时针方向展开范围为0至360度，目标风向角度 TargetAngle 由输入参数 AngleBase 结合 AngleBaseOffset 在一定范围内随机而得到，这样就可以在单位圆上通过三角函数来求得 Gust 的单位向量了。  
-为了后续能更直观地基于听者来使用这些参数，可以进一步计算 Gust 单位向量与镜头朝向向量 CameraForwardVector 两者间的关系，即求出风向相对于听者的入射角度 IncidentAngle，并规定听者左半边为-180至0度，右半边为0至180度。
-
-```
-FVector CameraFwdVector = PlayerCamera->GetActorForwardVector();
-FVector2D CameraDirVector = FVector2D(CameraFwdVector.X, CameraFwdVector.Y);
-
-float IncAglCrossProd = WindVector.X * CameraDirVector.Y - WindVector.Y * CameraDirVector.X;
-float IncAglDotProd = WindVector.X * CameraDirVector.X + WindVector.Y * CameraDirVector.Y;
-
-WindIncidentAngle = 180 - FMath::RadiansToDegrees(FMath::Atan2(FMath::Abs(IncAglCrossProd), IncAglDotProd));
-if (IncAglCrossProd < 0)
-{
-    WindIncidentAngle = -WindIncidentAngle;
-}
-```
-
-上述代码参考自视频 [Get The Angle Between 2D Vectors](https://www.youtube.com/watch?v=_VuZZ9_58Wg)，通过点乘和叉乘相关的运算并配合叉乘的正负性判断，可以快速地求出两向量之间的夹角，并转换为范围为-180至180之间的数值。
+一般来说风在水平方向上的运动比较直观可感，同时也是为了简化计算，暂且忽略风向在垂直方向 Z 轴上的变化，因此在计算风向时只需计算在 XY 平面上的角度变化就可以了。如上俯视图所示，规定世界坐标系内 X 正轴方向(1, 0)作为参考方向，起始为0度，顺时针方向展开一圈为360度，目标风向角度 TargetAngle 由输入参数 AngleBase 结合 AngleBaseOffset 在一定范围内随机而得到，这样就可以在单位圆上通过三角函数来求得 Gust 的单位向量了。  
 
 ### Calculate Wind Gust Intensity
 
 ![Calculate Wind Gust Intensity](media/DynamicWind_CalculateWindGustIntensity.jpeg)
 
-借用声音工作者应该都了解的 ADSR 概念，Gust 从起始到结束的整个周期 Lifetime 中，强度变化的曲线包络可以分成两个阶段，强度从0变化到最大目标强度 TargetIntensity 的阶段称为 Attack，又从 TargetIntensity 变化到0的阶段称为 Release。TargetIntensity、AttackTime 和 ReleaseTime 这三个数值由输入参数得到，可以根据需要表征出各种不同类型 Gust 的强度曲线包络。
+借用声音工作者应该都了解的 ADSR 概念，Gust 从起始到结束的整个周期 Lifetime 中，强度变化的曲线包络可以分成两个阶段，强度从0变化到最大目标强度 TargetIntensity 的阶段称为 Attack，又从 TargetIntensity 变化到0的阶段称为 Release。TargetIntensity、AttackTime 和 ReleaseTime 这三个数值由输入参数得到，可以根据需要表征出各种不同类型 Gust 的强度曲线包络。  
+下列代码通过变量 Timer 作为计时器配合 `FMath::InterpEaseInOut()` 函数来计算 Gust Vector 在 Lifetime 内的变化，改变输入的数值参数就可以快速获得类型各异且带有范围随机的结果。
 
 ```
 void FWindGust::GustInit()
@@ -90,8 +74,6 @@ void FWindGust::GustTick(float DeltaTime)
 }
 ```
 
-上述代码通过变量 Timer 作为计时器配合 `FMath::InterpEaseInOut()` 函数来计算 Gust Vector 在 Lifetime 内的变化，改变输入的数值参数就可以快速获得类型各异且带有范围随机的结果。
-
 ### Calculate Wind Gust Path
 
 ![Calculate Wind Gust Path](media/DynamicWind_CalculateWindGustPath.jpeg)
@@ -102,10 +84,71 @@ void FWindGust::GustTick(float DeltaTime)
 
 ![Calculate Wind Gust Interval](media/DynamicWind_CalculateWindGustInterval.jpeg)
 
+根据环境类型的需求，在生成 Gust 的系统中可以设置多套不同的 Gust 参数，比如有些短小急促有些缓慢绵长，它们按照各自设定的触发间隔来持续地生成实例化的 Gust。
+
+### Get Final Parameters
+
+每生成一个 Gust 都将其存入一个统计数组参与后续计算，对所有已生成的 Gust Vector 进行相加，就可以得到当前整个风系统的 Wind Vector。
+
+```
+// Tick gust...
+FVector2D GustVectorSum = FVector2D::ZeroVector;
+
+for (int i = 0; i < GustSumArray.Num(); i++)
+{
+    GustSumArray[i].GustTick(DeltaTime, PlayerCamera->GetCameraLocation());
+    GustVectorSum += GustSumArray[i].GustVector;
+}
+
+// FIN WindVector...
+WindVector = GustVectorSum;
+```
+
+风的强度 Wind Intensity 即 Wind Vector 的长度：
+
+```
+// FIN WindIntensity...
+WindIntensity = WindVector.Size();
+```
+
+风的方向 Wind Direction Angle 可以以 Wind Vector 与参考方向(1, 0)之间形成的夹角来表示。  
+下列代码参考自视频 [Get The Angle Between 2D Vectors](https://www.youtube.com/watch?v=_VuZZ9_58Wg)，通过点乘和叉乘相关的运算并配合叉乘的正负性判断，可以快速地求出两向量之间的夹角，并映射成一定范围内的数值。
+
+```
+// FIN WindDirectionAngle...
+float DirAglCrossProd = WindVector.X * ReferDirVector.Y - WindVector.Y * ReferDirVector.X;
+float DirAglDotProd = WindVector.X * ReferDirVector.X + WindVector.Y * ReferDirVector.Y;
+
+WindDirectionAngle = FMath::RadiansToDegrees(FMath::Atan2(FMath::Abs(DirAglCrossProd), DirAglDotProd));
+if (DirAglCrossProd > 0)
+{
+    WindDirectionAngle = 360 - WindDirectionAngle;
+}
+```
+
+为了后续能更直观地基于听者来使用风向参数，可以进一步计算 Wind Vector 与镜头朝向之间的关系，即求出风向相对于听者的入射角度 Wind Incident Angle，并规定听者左半边为-180至0度，右半边为0至180度。
+
+```
+// FIN WindIncidentAngle...
+FVector CameraFwdVector = PlayerCamera->GetActorForwardVector();
+FVector2D CameraDirVector = FVector2D(CameraFwdVector.X, CameraFwdVector.Y);
+
+float IncAglCrossProd = WindVector.X * CameraDirVector.Y - WindVector.Y * CameraDirVector.X;
+float IncAglDotProd = WindVector.X * CameraDirVector.X + WindVector.Y * CameraDirVector.Y;
+
+WindIncidentAngle = 180 - FMath::RadiansToDegrees(FMath::Atan2(FMath::Abs(IncAglCrossProd), IncAglDotProd));
+if (IncAglCrossProd < 0)
+{
+    WindIncidentAngle = -WindIncidentAngle;
+}
+```
+
 ## Trigger and Control Sound
 
 
 ## Summary
+
+最终效果见[视频演示]()。
 
 
 此系统的可扩展性
