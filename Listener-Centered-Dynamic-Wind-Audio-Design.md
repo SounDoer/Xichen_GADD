@@ -43,9 +43,11 @@ float IncAglDotProd = WindVector.X * CameraDirVector.X + WindVector.Y * CameraDi
 WindIncidentAngle = 180 - FMath::RadiansToDegrees(FMath::Atan2(FMath::Abs(IncAglCrossProd), IncAglDotProd));
 if (IncAglCrossProd < 0)
 {
-	WindIncidentAngle = -WindIncidentAngle;
+    WindIncidentAngle = -WindIncidentAngle;
 }
 ```
+
+上述代码参考自视频 [Get The Angle Between 2D Vectors](https://www.youtube.com/watch?v=_VuZZ9_58Wg)，通过点乘和叉乘相关的运算并配合叉乘的正负性判断，可以快速地求出两向量之间的夹角，并转换为范围为-180至180之间的数值。
 
 ### Calculate Wind Gust Intensity
 
@@ -56,38 +58,49 @@ if (IncAglCrossProd < 0)
 ```
 void FWindGust::GustInit()
 {
-	float IntensityTarget = FMath::RandRange(IntensityMin, IntensityMax);
-	float DirAngleTarget = FMath::RandRange(AngleBase - AngleBaseOffset, AngleBase + AngleBaseOffset);
-	float RadianTarget = FMath::DegreesToRadians(DirAngleTarget);
-
-	VectorTarget = FVector2D(FMath::Cos(RadianTarget), FMath::Sin(RadianTarget)) * IntensityTarget;
-
-	AttackTimeTarget = FMath::RandRange(AttackTime - AttackTimeOffset, AttackTime + AttackTimeOffset);
-	ReleaseTimeTarget = FMath::RandRange(ReleaseTime - ReleaseTimeOffset, ReleaseTime + ReleaseTimeOffset);
-	
-	Lifetime = AttackTimeTarget + ReleaseTimeTarget;
-	Timer = 0.f;
+    float IntensityTarget = FMath::RandRange(IntensityMin, IntensityMax);
+    float DirAngleTarget = FMath::RandRange(AngleBase - AngleBaseOffset, AngleBase + AngleBaseOffset);
+    float RadianTarget = FMath::DegreesToRadians(DirAngleTarget);
+    
+    VectorTarget = FVector2D(FMath::Cos(RadianTarget), FMath::Sin(RadianTarget)) * IntensityTarget;
+    
+    AttackTimeTarget = FMath::RandRange(AttackTime - AttackTimeOffset, AttackTime + AttackTimeOffset);
+    ReleaseTimeTarget = FMath::RandRange(ReleaseTime - ReleaseTimeOffset, ReleaseTime + ReleaseTimeOffset);
+    
+    Lifetime = AttackTimeTarget + ReleaseTimeTarget;
+    Timer = 0.f;
 }
 ```
 
 ```
 void FWindGust::GustTick(float DeltaTime)
 {
-	Timer += DeltaTime;
-
-	// Attack...
-	if (Timer < AttackTimeTarget)
-	{
-		GustVector = FMath::InterpEaseInOut<FVector2D>(FVector2D::ZeroVector, VectorTarget, Timer / AttackTimeTarget, InterpExp);
-	}
-	// Release...
-	else if (Timer >= AttackTimeTarget && Timer < Lifetime)
-	{
-		GustVector = FMath::InterpEaseInOut<FVector2D>(VectorTarget, FVector2D::ZeroVector, (Timer - AttackTimeTarget) / ReleaseTimeTarget, InterpExp);
-	}
+    Timer += DeltaTime;
+    
+    // Attack...
+    if (Timer < AttackTimeTarget)
+    {
+        GustVector = FMath::InterpEaseInOut<FVector2D>(FVector2D::ZeroVector, VectorTarget, Timer / AttackTimeTarget, InterpExp);
+    }
+    // Release...
+    else if (Timer >= AttackTimeTarget && Timer < Lifetime)
+    {
+        GustVector = FMath::InterpEaseInOut<FVector2D>(VectorTarget, FVector2D::ZeroVector, (Timer - AttackTimeTarget) / ReleaseTimeTarget, InterpExp);
+    }
 }
 ```
 
+上述代码通过变量 Timer 作为计时器配合 `FMath::InterpEaseInOut()` 函数来计算 Gust Vector 在 Lifetime 内的变化，改变输入的数值参数就可以快速获得类型各异且带有范围随机的结果。
+
+### Calculate Wind Gust Path
+
+![Calculate Wind Gust Path](media/DynamicWind_CalculateWindGustPath.jpeg)
+
+获得上述风的方向和强度之后，就相当于完成了对 Gust Vector 的运算，接下来计算 Gust 的移动路径就非常直接了。Gust 将从以听者位置为圆心、以 Distance 为半径的圆周上的一端开始移动，穿过圆心并结束于另一端。同时，HeightOffset 参数可以控制整条路径在高度上相对于听者的变化，比如表现草地可以设置在听者位置之下，表现树叶则可以设置在听者位置之上。
+
+### Calculate Wind Gust Interval
+
+![Calculate Wind Gust Interval](media/DynamicWind_CalculateWindGustInterval.jpeg)
 
 ## Trigger and Control Sound
 
