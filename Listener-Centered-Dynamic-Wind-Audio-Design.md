@@ -30,7 +30,7 @@ Audiokinetic Wwise 2021.1.4
 
 ![Calculate Wind Gust Direction](media/DynamicWind_CalculateWindGustDirection.jpeg)
 
-一般来说风在水平方向上的运动比较直观可感，同时也是为了简化计算，暂且忽略风向在垂直方向 Z 轴上的变化，因此在计算 Gust Direction 的时候，只需计算在 XY 平面上的角度变化就可以了。如上俯视图所示，规定世界坐标系内 X 正轴方向(1, 0)为0度，顺时针方向展开范围为0至360度，目标风向角度 TargetAngle 由初始输入 AngleBase 结合 AngleBaseOffset 在一定范围内随机而得到，这样就可以在单位圆上通过三角函数来求得 Gust 的单位向量了。  
+一般来说风在水平方向上的运动比较直观可感，同时也是为了简化计算，暂且忽略风向在垂直方向 Z 轴上的变化，因此在计算 Gust Direction 的时候，只需计算在 XY 平面上的角度变化就可以了。如上俯视图所示，规定世界坐标系内 X 正轴方向(1, 0)为0度，顺时针方向展开范围为0至360度，目标风向角度 TargetAngle 由输入参数 AngleBase 结合 AngleBaseOffset 在一定范围内随机而得到，这样就可以在单位圆上通过三角函数来求得 Gust 的单位向量了。  
 为了后续能更直观地基于听者来使用这些参数，可以进一步计算 Gust 单位向量与镜头朝向向量 CameraForwardVector 两者间的关系，即求出风向相对于听者的入射角度 IncidentAngle，并规定听者左半边为-180至0度，右半边为0至180度。
 
 ```
@@ -50,6 +50,44 @@ if (IncAglCrossProd < 0)
 ### Calculate Wind Gust Intensity
 
 ![Calculate Wind Gust Intensity](media/DynamicWind_CalculateWindGustIntensity.jpeg)
+
+借用声音工作者应该都了解的 ADSR 概念，Gust 从起始到结束的整个周期 Lifetime 中，强度变化的曲线包络可以分成两个阶段，强度从0变化到最大目标强度 TargetIntensity 的阶段称为 Attack，又从 TargetIntensity 变化到0的阶段称为 Release。TargetIntensity、AttackTime 和 ReleaseTime 这三个数值由输入参数得到，可以根据需要表征出各种不同类型 Gust 的强度曲线包络。
+
+```
+void FWindGust::GustInit()
+{
+	float IntensityTarget = FMath::RandRange(IntensityMin, IntensityMax);
+	float DirAngleTarget = FMath::RandRange(AngleBase - AngleBaseOffset, AngleBase + AngleBaseOffset);
+	float RadianTarget = FMath::DegreesToRadians(DirAngleTarget);
+
+	VectorTarget = FVector2D(FMath::Cos(RadianTarget), FMath::Sin(RadianTarget)) * IntensityTarget;
+
+	AttackTimeTarget = FMath::RandRange(AttackTime - AttackTimeOffset, AttackTime + AttackTimeOffset);
+	ReleaseTimeTarget = FMath::RandRange(ReleaseTime - ReleaseTimeOffset, ReleaseTime + ReleaseTimeOffset);
+	
+	Lifetime = AttackTimeTarget + ReleaseTimeTarget;
+	Timer = 0.f;
+}
+```
+
+```
+void FWindGust::GustTick(float DeltaTime)
+{
+	Timer += DeltaTime;
+
+	// Attack...
+	if (Timer < AttackTimeTarget)
+	{
+		GustVector = FMath::InterpEaseInOut<FVector2D>(FVector2D::ZeroVector, VectorTarget, Timer / AttackTimeTarget, InterpExp);
+	}
+	// Release...
+	else if (Timer >= AttackTimeTarget && Timer < Lifetime)
+	{
+		GustVector = FMath::InterpEaseInOut<FVector2D>(VectorTarget, FVector2D::ZeroVector, (Timer - AttackTimeTarget) / ReleaseTimeTarget, InterpExp);
+	}
+}
+```
+
 
 ## Trigger and Control Sound
 
