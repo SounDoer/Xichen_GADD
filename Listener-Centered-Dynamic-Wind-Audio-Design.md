@@ -24,18 +24,37 @@ Audiokinetic Wwise 2021.1.4
 
 ![Wind Gust Vector](media/DynamicWind_WindGustVector.jpeg)
 
-从听者的角度来看，风的两个属性与实际感受最为相关：一是 Wind Direction，风的方向；二是 Wind Intensity，风的强度。持续的风可以看作是由一阵阵风 [Wind Gust](https://en.wikipedia.org/wiki/Wind_gust) 此起彼伏地不断组合而成，每一个 Wind Gust 都有着各自的 Wind Direction，以及在各自的周期内随时间变化的 Wind Intensity。因此，我们可以设计一个能够持续不断地产生 Wind Gust 的系统，其中每一个 Wind Gust 可以看作是一个长度随时间变化的向量，向量的初始参数由用户按需决定，接下来的具体过程也正是围绕如何计算 Wind Gust Vector 的各种属性来展开的。
+从听者的角度来看，风的两个属性与实际感受最为相关：一是 Wind Direction，风的方向；二是 Wind Intensity，风的强度。持续的风可以看作是由一阵阵风 [Gust](https://en.wikipedia.org/wiki/Wind_gust) 此起彼伏地不断组合而成，每一个 Gust 都有着各自的 Direction，以及在各自的周期内随时间变化的 Intensity。因此，我们可以设计一个能够持续不断地产生 Gust 的系统，其中每一个 Gust 可以看作是一个长度随时间变化的向量，向量的参数由初始输入决定，所有 Gust Vector 向量之和就是当下整体风的向量 Wind Vector，接下来的具体过程也正是围绕如何计算这些向量来展开的。
 
 ### Calculate Wind Gust Direction
 
 ![Calculate Wind Gust Direction](media/DynamicWind_CalculateWindGustDirection.jpeg)
 
-一般来说风在水平方向上的运动比较直观可感，同时也是为了简化计算，暂且忽略风向在垂直方向 Z 轴上的变化，因此在计算 Gust Direction 的时候，只需计算在 XY 平面上的角度变化就可以了。如上俯视图所示，规定
+一般来说风在水平方向上的运动比较直观可感，同时也是为了简化计算，暂且忽略风向在垂直方向 Z 轴上的变化，因此在计算 Gust Direction 的时候，只需计算在 XY 平面上的角度变化就可以了。如上俯视图所示，规定世界坐标系内 X 正轴方向(1, 0)为0度，顺时针方向展开范围为0至360度，目标风向角度 TargetAngle 由初始输入 AngleBase 结合 AngleBaseOffset 在一定范围内随机而得到，这样就可以在单位圆上通过三角函数来求得 Gust 的单位向量了。  
+为了后续能更直观地基于听者来使用这些参数，可以进一步计算 Gust 单位向量与镜头朝向向量 CameraForwardVector 两者间的关系，即求出风向相对于听者的入射角度 IncidentAngle，并规定听者左半边为-180至0度，右半边为0至180度。
+
+```
+FVector CameraFwdVector = PlayerCamera->GetActorForwardVector();
+FVector2D CameraDirVector = FVector2D(CameraFwdVector.X, CameraFwdVector.Y);
+
+float IncAglCrossProd = WindVector.X * CameraDirVector.Y - WindVector.Y * CameraDirVector.X;
+float IncAglDotProd = WindVector.X * CameraDirVector.X + WindVector.Y * CameraDirVector.Y;
+
+WindIncidentAngle = 180 - FMath::RadiansToDegrees(FMath::Atan2(FMath::Abs(IncAglCrossProd), IncAglDotProd));
+if (IncAglCrossProd < 0)
+{
+	WindIncidentAngle = -WindIncidentAngle;
+}
+```
+
+### Calculate Wind Gust Intensity
+
+![Calculate Wind Gust Intensity](media/DynamicWind_CalculateWindGustIntensity.jpeg)
 
 ## Trigger and Control Sound
 
 
-## Pros and Cons
+## Summary
 
 
 此系统的可扩展性
