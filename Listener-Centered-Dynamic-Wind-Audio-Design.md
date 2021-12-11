@@ -145,6 +145,67 @@ if (IncAglCrossProd < 0)
 
 ## Trigger and Control Sound
 
+完成上述整个风系统的设计与运算之后，就到了触发声音和使用相应参数进行控制的环节了。
+
+### Wind Gust Sound
+
+每当生成一个 Gust 实例时，同时创建一个对应的 `UAkComponent` 并开始播放声音；Gust 的位置更新和 Intensity RTPC 需要设置在对应的 `UAkComponent` 上，以此保证同时存在的多个 Gust 之间时相互独立的。
+
+```
+void FWindGust::GustInit(UDirectionalWindComponent* Outer)
+{
+    // Showed above in chapter of Calculate Wind Gust Intensity...
+
+    if (AkSound)
+    {
+        AkComp = NewObject<UAkComponent>(Outer);
+        AkComp->RegisterComponent();
+        AkComp->PostAkEvent(AkSound, {}, {}, {}, {});
+    }
+}
+```
+
+```
+void FWindGust::GustTick(float DeltaTime, FVector ListenerLocation)
+{
+    // Showed above in chapter of Calculate Wind Gust Intensity...
+    
+    float DistanceToListener;
+    // Attack...
+    if (Timer < AttackTimeTarget)
+    {
+        DistanceToListener = FMath::InterpEaseInOut<float>(-1, 0, Timer / AttackTimeTarget, InterpExp);
+    }
+    // Release...
+    else if (Timer >= AttackTimeTarget && Timer < Lifetime)
+    {
+        DistanceToListener = FMath::InterpEaseInOut<float>(0, 1, (Timer - AttackTimeTarget) / ReleaseTimeTarget, InterpExp);
+    }
+    
+    if (AkComp)
+    {
+        float RltLocMultipiler = DistanceToListener * Distance;
+        FVector RltLocation = FVector(VectorTarget.X * RltLocMultipiler, VectorTarget.Y * RltLocMultipiler, HeightOffset);
+        FVector WldLocation = ListenerLocation + RltLocation;
+        AkComp->SetWorldLocation(WldLocation);
+        AkComp->SetRTPCValue(IntensityRTPC, GustVector.Size(), {}, {});
+    }
+}
+```
+
+![Wind Gust Sound](media/DynamicWind_WindGustSound.jpeg)
+
+由于 Gust 时长由输入参数决定且可以在很大范围内随机变化，制作固定长度的声音素材很难与其匹配，因此可以直接制作一段可循环的声音素材，并用 GustIntensity RTPC 控制其响度依据强度包络曲线进行淡入淡出；在 Attenuation 设置中添加 Spread Curve，让声音的包围感依据距离产生变化。另外还有一个值得一提的小技巧是，在 PostEvent 中添加一个随机位置的 Seek Action，这样每次播放都会从音频文件的不同位置开始，让声音产生更多变化。  
+如上图所示，在 Audio Object Profiler 界面中可以观察各个 Gust 基于听者的移动路径，在 Game Sync Monitor 中可以观察各个 Gust 各自的 GustIntensity RTPC 曲线变化。
+
+### Wind Sustained Sound
+
+除了 Gust Sound 作为3D声源提供方向感之外，额外播放一层基于声道的环绕声素材 Sustained Sound 作为持续的风声铺底，营造包围感的同时还可以配合入射角度进一步加强方向感。
+
+![Wind Sustained Sound](media/DynamicWind_WindSustainedSound.jpeg)
+
+将四声道素材拆分成四条单声道素材，设置到相对应的 L、R、Ls、Rs 声像位置上，并用 WindIncidentAngle RTPC 来调整其响度变化，这样的话与入射角一致的方向上的声音会比其他方向略微响一些。同时，WindIntensity RTPC 也可以用于控制这个环绕声素材的整体响度变化。  
+如上图所示，在 Game Sync Monitor 中可以观察 WindIncidentAngle 和 WindIntensity 的 RTPC 曲线变化。
 
 ## Summary
 
