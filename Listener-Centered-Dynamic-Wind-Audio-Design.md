@@ -5,6 +5,24 @@ nav_exclude: true
 
 # 基于听者的动态风声设计
 
+***
+<!-- Start Document Outline -->
+
+* [Wind Blowing over Head](#wind-blowing-over-head)
+* [Deconstruct and Remodel Wind](#deconstruct-and-remodel-wind)
+	* [Calculate Wind Gust Direction](#calculate-wind-gust-direction)
+	* [Calculate Wind Gust Intensity](#calculate-wind-gust-intensity)
+	* [Calculate Wind Gust Path](#calculate-wind-gust-path)
+	* [Calculate Wind Gust Interval](#calculate-wind-gust-interval)
+	* [Get Final Parameters](#get-final-parameters)
+* [Trigger and Control Sound](#trigger-and-control-sound)
+	* [Wind Gust Sound](#wind-gust-sound)
+	* [Wind Sustained Sound](#wind-sustained-sound)
+* [Summary](#summary)
+
+<!-- End Document Outline -->
+***
+
 ## Wind Blowing over Head
 
 想象一下自己身处在一片竹林之中，徐徐微风穿梭在数米高的竹林之间，头顶上茂密的竹叶随风而动，在各个方位发出持续的窸窣声，偶尔一阵强风从后方吹来，竹叶的窸窣声由远及近拂过头顶，又从前方吹远淡去。这一小段场景所描述的听觉体验主要有两个重点，一是由竹林风声环绕四周带来的包围感，二是由间歇性的强风吹过头顶引起的方向感。本文将以实现上述听觉体验为目标，提供一种在传统环境声设计基础上进行改进的实现方案。
@@ -209,7 +227,8 @@ void FWindGust::GustTick(float DeltaTime, FVector ListenerLocation)
 
 ## Summary
 
-最终效果见[视频演示]()。
+最终效果见[视频演示](https://youtu.be/JDGloa1YwY0)。  
+视频中红色箭头表示 Wind Vector，竹叶特效由风系统驱动，右侧为 Wwise 中 RTPC 和 Audio Object 的实时状态。
 
 这个设计的最初起因是，想着如何用简单的方式在游戏中动态地实现风吹而过的体验，一开始尝试的是在环绕声素材上控制响度和高低通变化，测试发现仅对素材进行调整的方式达不到效果。期间发现了文章开头提到的用流体力学实现风系统的方案，大致浏览了一下论文之后就放弃了，我对自己的数学功底和代码水平还是有自知之明的，而且对从声音表现出发考虑的需求来说，完全用不上这么重型且底层的设计。几经修改，最终确定了现在这种基于听者、围绕向量展开计算、3D移动声源结合2D声源的方案。
 
