@@ -20,7 +20,7 @@ permalink: /
 * [展望游戏音频设计的发展方向](What-will-The-Next-Gen-of-Game-Audio-Design-be-like.md)
 * [“音乐作为关卡设计” UE & Wwise 实践案例](A-Practice-of-Music-as-Level-Design-with-UE-Wwise.md)
 * [“音频可视化” UE & Wwise 实践案例](A-Practice-of-Audio-Visualization-with-UE-Wwise.md)
-* [WIP](A-Procedural-Way-of-Melee-Weapon-Whoosh-Sound-Design.md)
+* [冷兵器 Procedural Whoosh 音频设计案例](A-Procedural-Way-of-Melee-Weapon-Whoosh-Sound-Design.md)
 * [基于听者的动态风声设计](Listener-Centered-Dynamic-Wind-Audio-Design.md)
 
 ***
