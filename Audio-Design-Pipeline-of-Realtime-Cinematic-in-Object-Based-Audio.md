@@ -9,9 +9,10 @@ nav_exclude: true
 
 ## Realtime Cinematic
 
-首先，本文讨论的实时动画是指穿插在游戏进行过程中非玩家控制的线性叙事部分 [Cutscene](https://en.wikipedia.org/wiki/Cutscene)（过场动画），称为 Realtime Cinematic 是为了强调其两个特点：一是 Realtime，区别于播放预渲染流媒体视频的实时方式，与游戏 Gameplay 部分之间有更强的联系，实现过场动画与玩家镜头之间的无缝衔接；二是 Cinematic，无论是预渲染还是实时渲染，从最终的呈现效果上来看都是戏剧性的线性影视化内容，也就是说实时动画的音频设计目标和标准与制作线性内容是一致的。
+首先，本文讨论的实时动画是指穿插在游戏进行过程中非玩家控制的线性叙事部分 [Cutscene](https://en.wikipedia.org/wiki/Cutscene)（过场动画），称为 Realtime Cinematic 是为了强调其两个特点：一是 Realtime，区别于播放预渲染流媒体视频的实时方式，与游戏 Gameplay 部分之间有更强的联系，实现过场动画与玩家镜头之间的无缝衔接；二是 Cinematic，虽然具体的实现方式和工具流程有所区别，但无论是预渲染还是实时渲染，从最终的呈现效果上来看都是线性的影视化内容，因此实时动画音频设计的听感目标和评价标准与制作线性内容也是一致的。
 
-《SYNCED: Off-Planet》
+如上图，《SYNCED: Off-Planet》开场约二十分钟的流程中有大大小小十多个过场动画，串联起了整个关卡的剧情发展和情绪推动。其中大多数过场动画的开头和结尾都采用了
+
 
 ### The Goal of Cinematic Sound
 
