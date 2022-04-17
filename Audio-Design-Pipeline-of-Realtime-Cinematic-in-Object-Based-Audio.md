@@ -9,7 +9,9 @@ nav_exclude: true
 
 ## Realtime Cinematic
 
-当游戏实时渲染画面质量不断提升，已经能够实时渲染非常高质量的画面了，在最终效果的呈现上已经与离线渲染线性制作的 Cinemtaic 内容越来越接近了，游戏音频对这些高精度强沉浸感的内容设计也因更新的技术标准和更高的体验要求而在工具流程上发生了变化
+首先，本文讨论的实时动画是指穿插在游戏进行过程中非玩家控制的线性叙事部分 [Cutscene](https://en.wikipedia.org/wiki/Cutscene)（过场动画），称为 Realtime Cinematic 是为了强调其两个特点：一是 Realtime，区别于播放预渲染流媒体视频的实时方式，与游戏 Gameplay 部分之间有更强的联系，实现过场动画与玩家镜头之间的无缝衔接；二是 Cinematic，无论是预渲染还是实时渲染，从最终的呈现效果上来看都是戏剧性的线性影视化内容，也就是说实时动画的音频设计目标和标准与制作线性内容是一致的。
+
+《SYNCED: Off-Planet》
 
 ### The Goal of Cinematic Sound
 
@@ -31,6 +33,7 @@ https://games.dolby.com/atmos/wwise/
 
 ## Audio Design Pipeline
 
+### 改进
 
 希辰  
 2022.3.29
