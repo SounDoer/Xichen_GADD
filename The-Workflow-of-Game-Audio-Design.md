@@ -9,7 +9,7 @@ nav_exclude: true
 
 传统的线性媒体声音设计作为一项基本技能，大多数想从事游戏音频设计的朋友们对其工作方式和流程多少是有所了解的，毕竟想要找工作的话，一份视频作品 Demoreel 肯定是少不了的。相较而言游戏开发则更为复杂，声音设计专业出身的朋友们难以独立完成，项目合作的机会也比较少，因此往往不太了解游戏音频设计是如何在实际的游戏项目中开展工作的。所以，我想通过图例的方式来梳理一下游戏音频设计的工作流，重点聊一聊音频设计受游戏开发流程影响而产生的工作特点。
 
-![The Workflow of Game Audio Design](media/TheWorkflowOfGameAudioDesign.jpg)
+![The Workflow of Game Audio Design](The-Workflow-of-Game-Audio-Design/GameAudioDesignWorkflow.jpg)
 
 依据上图来高度概括的话，游戏音频设计的实现目标就是，根据**设计需求**制作出相应的**音频数据**，并将其整合到游戏引擎中去，与其它设计元素共同形成最终整体的**游戏表现**。
 
@@ -34,7 +34,7 @@ nav_exclude: true
 
 以上就是根据图例所示，以音频数据为核心展开梳理的游戏音频设计工作流。而游戏开发本身有一个特点就是**迭代**（Iteration），需要不断进行重复性的工序来无限逼近预想的表现效果，游戏音频设计作为其中一环，自然也是要遵循这个规律的，因此上述的工作流其实是自始至终地贯穿在游戏开发的每一个阶段中的。
 
-![The Workflow of Game Audio Design with Middleware](media/TheWorkflowOfGameAudioDesignWithMiddleware.jpg)
+![The Workflow of Game Audio Design with Middleware](The-Workflow-of-Game-Audio-Design/GameAudioDesignWorkflowWithMiddleware.jpg)
 
 现在，游戏音频中间件（Audio Middleware）工具似乎越来越成为大多数开发团队的标配了，其日益丰富的功能极大地提高了游戏音频设计师的工作效率，某种程度上也多少改变了工作流程。  
 依上图，我认为音频中间件的价值主要体现在两点：一是，音频中间件提供了更有针对性的功能和管线来全方位地管理海量的声音资源，以满足各种变化且复杂的开发环境的要求。同时，某些音频中间件与数字音频工作站之间的联动功能，可以让游戏音频设计师对声音资源进行更加快捷方便的调整。二是，音频中间件完成了一部分的实现逻辑，省去了在游戏引擎中重复造轮子的成本，游戏音频设计师可以在图形化界面的软件中实现某些复杂的音频功能，并在游戏引擎中快速地进行验证与调试。这极大地减少了程序员的工作量，而且也给游戏音频设计师在创意上提供了更多的试验空间。
