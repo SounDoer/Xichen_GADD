@@ -24,7 +24,7 @@ nav_exclude: true
 
 ## 游戏音频设计的现状
 
-![The Improvement of Hardware Performance](media/TheImprovementOfHardwarePerformance.jpg)
+![The Improvement of Hardware Performance](What-will-The-Next-Gen-of-Game-Audio-Design-be-like/TheImprovementOfHardwarePerformance.jpg)
 
 1983年，任天堂推出了风靡全球的 Nintendo Famicom，经典配色的“红白机”。这算是我最早认识的游戏机了，就把它作为标尺来分析一下硬件性能：8-bit 1.79MHz 处理器，2KB 内存，音频方面支持 4-bit 波表合成器和最高 7-bit 15.7458kHz 采样文件，最多可同时播放五个声音。2013年，Sony 推出了 PlayStation 4 主机，而它的性能已经达到了：八个 64-bit 1.6GHz 处理器，8GB 内存，24-bit 48KHz 音频文件格式成为开发标配，八通道输出支持多种环绕声音响设置，可同时发声数方面也没有了硬性限制。  
 显而易见，这三十年的硬件发展是非常迅速的，性能水平的提升几乎是以百千倍计的。而就在我写这篇文章的时候，Sony 和 Microsoft 也都相继推出了新一代的游戏主机，性能方面更是有了进一步的提高。
@@ -32,7 +32,7 @@ nav_exclude: true
 另外值得一提的是，移动端设备的性能也已经到了非常高的水准，越来越多的游戏开始尝试主机端和移动端的多平台支持了。虽然由于手机本身的功能定位和物理机能的限制，在实际表现上与主机相比还有些差距，但是游戏开发的思路和目标在这两个平台之间并没有明显的差异，只是各有不同的侧重而已：主机端追求的是在极限的性能要求下达到最极致的表现，而移动端则更注重在保证尽可能好的表现下去适配更广泛的机型。  
 总的来说，就从内存和处理器这两个指标来理解，硬件性能的提升对游戏音频设计意味着：更大的内存意味着可以使用更多高质量的声音资源，更快的处理器意味着可以处理更多高精度的实时控制。
 
-![The Workflow of Game Audio Design](media/TheWorkflowOfGameAudioDesign_v2.jpg)
+![The Workflow of Game Audio Design](What-will-The-Next-Gen-of-Game-Audio-Design-be-like/TheWorkflowOfGameAudioDesign.jpg)
 
 因此在这样的硬件性能水平之下，游戏音频设计也形成了目前一套相对成熟的开发流程，借用[《游戏音频设计的工作流》](The-Workflow-of-Game-Audio-Design.md)一文中的图示来说明：在数字音频工作站（Digital Audio Workstation）中制作出高质量的声音资源（Sound Asset，通常以 wav 格式文件为主），导入音频中间件（Audio Middleware）中进行统一管理和进一步处理，并与游戏引擎（Game Engine）深度结合来构建实现逻辑（Implementation Logic），最终以音频数据（Audio Data，以 AK Wwise 为例即 Event）的形式与游戏中其它元素配合来实现各种丰富的条件触发和实时变化。
 
@@ -51,7 +51,7 @@ nav_exclude: true
 
 根据上述考量因素可以制定出整体所需的数据结构和资源规模。以我们目前一个项目为例来进行估算，一个男性角色的动画序列数量超过了1500个，其中男性脚步声数据使用到的声音资源文件数量超过了5000个。
 
-![Footstep Sound Asset and Animation Notify](media/FootstepSoundAssetAndAnimationNotify.jpg)
+![Footstep Sound Asset and Animation Notify](What-will-The-Next-Gen-of-Game-Audio-Design-be-like/FootstepSoundAssetAndAnimationNotify.jpg)
 
 上述这种制作方式可以称为是 Sample-Based Asset Production，即声音资源的来源是海量的音频格式文件，最终的声音效果很大程度上也取决于这些资源本身的质量。梳理一下这种制作方式的特点，以及我对它的一些想法：  
 1. 角色的前进后退和快走慢跑等行为在声音上的细微差别真的可以体现出来吗？优秀的拟音师确实可以表演出这些动作之间的细微差异，并以录音的形式明确细致地记录下来。也正是如此，使用样本资源是目前最主要也最有效的制作方式。  
@@ -76,11 +76,11 @@ nav_exclude: true
 在强竞技的写实风格射击游戏中，玩家对声音的关注点不仅仅是枪声听起来爽不爽，更会对枪械射击和人物动作等声音的空间感和方位感提出更高的要求，因为这些声音在符合物理常识和听觉习惯的情况下能够给玩家提供更多的战局信息。所以在游戏音频设计中，我们需要解决的一大问题就是如何在游戏世界中重建一个拟真的声学环境，让声音在其中传播时听起来真实可信。  
 声学环境建模本身就是学术研究中的一大方向，在建筑声学等领域已经有了非常多的研究成果和实际应用，我在这方面没有任何的研究经验，因此仅从游戏音频设计的角度来讨论一下目前常见的解决方案。
 
-![General Acoustic Environment Modeling](media/GeneralAcousticEnvironmentModeling.jpg)
+![General Acoustic Environment Modeling](What-will-The-Next-Gen-of-Game-Audio-Design-be-like/GeneralAcousticEnvironmentModeling.jpg)
 
 首先从响度的角度来考虑，一个声音在从激发到消失的过程中可以被分为三个部分，即直达声（Direct Sound）、反射声（Early Reflect）和混响声（Late Reverb），这三部分声音会以动态地生成、变化和混合，来形成声源在空间中的整体效果。同时考虑声音在传播过程中的两个行为特征，衍射（Diffraction）与透射（Transmission），这两者与空间的几何体（Geometry）信息是强相关的，需要配合听者（Listener）与声源（Emitter）的空间信息和相对关系共同参与运算。简单理解，以上五点就是在游戏中重建声音传播（Sound Propagation）现象时可以被设计和控制的要素。
 
-![AK Wwise Spatial Audio Solution](media/AKWwiseSpatialAudioSolution.jpg)
+![AK Wwise Spatial Audio Solution](What-will-The-Next-Gen-of-Game-Audio-Design-be-like/AKWwiseSpatialAudioSolution.jpg)
 
 以音频中间件 Audiokinetic Wwise 的 [Spatial Audio](https://www.audiokinetic.com/products/wwise-spatial-audio/) 解决方案为例，游戏音频设计师可以从以下几个方面入手：  
 1. 在 Wwise 中对各类声音定义不同的 Attenuation 设置，其中包含了声音可传播的最大距离以及基于距离变化的响度、低频和高频的衰减曲线，主要定义的是直达声这一部分的传播属性。另外还会包含声音在不同距离上响应混响效果的曲线，后续被用于混响声部分的计算。  
@@ -105,11 +105,11 @@ Microsoft 在2011年提出了一种叫做 [Wave Acoustics](https://www.microsoft
 
 ## 空间声与双耳声音频（Ambisonics & Binaural Audio）
 
-![Sound Playback Methods](media/SoundPlaybackMethods.jpg)
+![Sound Playback Methods](What-will-The-Next-Gen-of-Game-Audio-Design-be-like/SoundPlaybackMethods.jpg)
 
 目前主机平台上的大多数游戏都会按 5.1 环绕立体声以上的重放标准来进行最终的混音，而绝大多数玩家是没有这样规格的重放条件的，主要还是以双声道立体声音箱、耳机甚至只是电视机扬声器居多。因此，无论我们在音频实现上采用了多么先进的技术，或是在混音阶段使用了多么高端的环境与设备，最终都要考虑一个非常重要且实际的问题，那就是如何保证玩家在规格各异的终端设备上也能听到高质量的声音重放效果。那么耳机作为一个大多数玩家都能获取的设备，因而也就成了我们的研究重点，值得去研究如何在耳机上实现一个更加立体且逼真的听觉效果。
 
-![VBAP vs. Ambisonics & HRTF](media/VBAP_Ambisonics_HRTF.jpg)
+![VBAP vs. Ambisonics & HRTF](What-will-The-Next-Gen-of-Game-Audio-Design-be-like/VBAP_Ambisonics_HRTF.jpg)
 
 针对这个问题，我们首先要理解目前游戏中是如何处理声音定位（Sound Positioning）的。在游戏的三维世界中，听者与各个声源都有各自的坐标，任意两者之间的相对关系经过向量计算便可得出，基于听者而言的声音定位信息是简单且明确的。这种处理方式与游戏开发中基于对象的编程逻辑类似，也可以理解为是 [Object-Based Audio](https://blog.audiokinetic.com/working-with-object-based-audio/)。游戏本身的动态和交互特点，要求声音必须包含完整的定位信息用于实时计算，因此在游戏开发阶段，我们更多考虑的是听者与声源之间相对关系的变化，而非特定声道上具体的重放内容，这一点与音乐和电影等基于声道（Channel-Based）的声音制作思路是完全不同的，我认为也是其优越性的体现。正是因为 Object-Based Audio 具有这样的特点，[Dolby Atmos](https://en.wikipedia.org/wiki/Dolby_Atmos) 等环绕声技术也引入了类似的设计思路，用于实现更丰富立体的电影声音重放效果。  
 尽管 Object-Based 的方式保留了声源完整的空间信息，我们最终还是要把声音映射到只有两个声道的耳机上进行重放，目前最常见的方式是 VBAP（[Vector-Based Amplitude Panning](https://en.wikipedia.org/wiki/Amplitude_panning)）。VBAP 的优点在于无需对声场做额外改动就能映射到各种声道配置的重放系统上，然而它的缺点也是明显的，玩家听到的并不是真正的全方位的声场，声源相对于听者在前后方向和高度上的差异被压缩了，直观地来说就是原本的三维空间被压扁成了一个二维平面。  
