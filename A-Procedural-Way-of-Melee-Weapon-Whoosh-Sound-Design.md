@@ -31,7 +31,7 @@ Audiokinetic Wwise 2021.1.0
 
 首先，有必要明确一下本文所指的 Procedural 这一概念。正如[《展望游戏音频设计的发展方向》](https://soundoer.github.io/Xichen_GADD/What-will-The-Next-Gen-of-Game-Audio-Design-be-like.html)一文中“程序化音频”章节内提到的，程序化音频的思考重点是物体为什么发声和怎么样发声，而不是简单地只考虑具体的声音表现。以相对宽泛的尺度去考量，其实目前游戏音频设计中许多基于素材并结合动态参数的设计范式都可以被称为是 Procedural 的，两个典型的例子就是汽车引擎和枪械射击。例如，汽车引擎声音的实现特点是有许多如转速之类的动态参数时刻控制着持续性声音的属性变化，枪械射击声音的实现特点则是从枪械发声部位、频段和距离等方面入手准备各个层次的声音素材。**而本文所说的 Procedural Whoosh 实现也是基于这类范式的，与汽车引擎的声音实现非常相似，对光标移动轨迹进行实时分析来获取速度、加速度和方向等之类的动态参数，用于控制 Whoosh 各个层次的声音素材的属性变化和混合过渡。**
 
-![Procedural Whoosh Sound](media/ProceduralWhoosh_Flow.png)
+![Procedural Whoosh Sound](A-Procedural-Way-of-Melee-Weapon-Whoosh-Sound-Design/Workflow.png)
 
 ## Deconstruct Sound Assets
 
@@ -48,7 +48,7 @@ Whoosh 声音的主体部分，能量在频段上的不同分布能够明显体�
 * **Metallic**  
 带有金属质感的高频部分，其中明显的基频与谐波成分体现了由金属材质带来的锋利感。
 
-![Deconstruct Sound Assets](media/ProceduralWhoosh_DeconstructSoundAssets.png)
+![Deconstruct Sound Assets](A-Procedural-Way-of-Melee-Weapon-Whoosh-Sound-Design/DeconstructSoundAssets.png)
 
 在频域上区分出层次之后就可以通过 Granular Synth 等方式，从已固定成型的单个 Whoosh 资源里提取并合成出频段成分稳定、长时可循环的素材了。
 
@@ -58,7 +58,7 @@ Whoosh 声音的主体部分，能量在频段上的不同分布能够明显体�
 
 有了素材资源之后，下一步就是从光标移动轨迹入手，计算出可以用来描述光标运动特征的各种属性，也就是用于控制声音的各种动态参数。从获取光标屏幕位置开始，通过基本的算术和物理公式就可以依次计算出光标的模拟位置、方向角度、速度、加速度和加速度变化速率。
 
-![Calculate Control Parameters](media/ProceduralWhoosh_CalculateControlParameters.png)
+![Calculate Control Parameters](A-Procedural-Way-of-Melee-Weapon-Whoosh-Sound-Design/CalculateControlParameters.png)
 
 * **Position**  
 对光标屏幕位置做插值平滑处理来得到其模拟位置，并通过 InterpSpeed 数值来控制处理速度，速度越快，模拟位置跟随得就越快，感觉就越跟手。另外，此数值可以进一步与冷兵器重量相关联，用于不同重量下的惯性表现。
@@ -157,11 +157,11 @@ FVector UAbilityComponent::ScreenPositionToWorldLocation(FVector2D ScreenPositio
 
 一是 RTPC 自身对控制参数的响应。通过 Slew Rate 和 Filtering Over Time 两个 Interpolation 模式以及其中 Attack 和 Release 数值的调整，可以让各个素材的同类 RTPC 对同一个控制参数有着不同的响应表现，也就是影响了各个声音层次的 Envelope。比如，Metallic 层次 Velocity RTPC 有着较小的 Attack 和 Release 数值，可以让这层声音出现得比较慢且持续稍长一些。
 
-![Game Parameters & Asset Layers](media/ProceduralWhoosh_DefineModelingRules_01.png)
+![Game Parameters & Asset Layers](A-Procedural-Way-of-Melee-Weapon-Whoosh-Sound-Design/DefineModelingRules_01.png)
 
 二是 RTPC 对素材属性的控制。比如，Velocity 可以与 Volume 相关联，作为声音起止的主要控制参数；Direction Angle 和 Acceleration 可以与 Pitch 相关联，小幅度地调整音调产生变化感。另外还可以用来调控效果插件的参数，实现更多丰富的动态效果。比如，Metallic 层次的 Accel Slew Rate 与 Tremolo 效果器中的 Depth 和 Frequency 相关联，就可以模拟冷兵器小幅快速来回晃动时金属震颤的质感。
 
-![RTPCs](media/ProceduralWhoosh_DefineModelingRules_02.png)
+![RTPCs](A-Procedural-Way-of-Melee-Weapon-Whoosh-Sound-Design/DefineModelingRules_02.png)
 
 ## Conclusion
 
