@@ -34,7 +34,7 @@ Audiokinetic Wwise 2019.2.9
 
 ## 明确设计需求
 
-![HandleAttack Function Explanation](media/MusicAsLevelDesign_HandleAttack.jpeg)
+![HandleAttack Function Explanation](A-Practice-of-Music-as-Level-Design-with-UE-Wwise/HandleAttack.jpeg)
 
 首先需要明确具体的设计需求。如上图所示，敌人的攻击行为由带有一个参数的 HandleAttack(WeaponType) 函数控制，WeaponType 决定了所用武器的各类属性，其中与此处设计相关的数值是 Charge Time，即不同武器有着不同的充能时间。HandleAttack 函数执行时首先获取当前的 WeaponType，然后进行 Start Charge，在经过 Charge Time 之后才实施 Actual Attack。需要实现的设计需求是，敌人在使用不同武器时（即 Charge Time 可变的情况下），Actual Attack 实施的时间点都将与音乐中的节拍点保持一致。  
 其实在 Wwise 中通过音乐内的标记信息来触发函数的功能实现并不复杂，原生 API 中的 PostEvent() 函数本身就开放了回调函数（Callback Function）。**只不过，这个案例的设计需求稍微有些不同的地方是，音乐中需要标记的时间点确实是在节拍点上，但实际调用函数的时间点却是在标记的节拍点之前，且调用函数的提前时间量是由游戏中的参数来实时决定的，因此每次实施攻击时都需要进行额外的计算。**
@@ -43,21 +43,21 @@ Audiokinetic Wwise 2019.2.9
 
 如上一节所说，Wwise 本身已有根据音乐标记信息触发回调函数的功能，对于需要提前触发且对齐节拍点的设计需求，我首先想到的是利用 Wwise 提供的 Trigger 功能。
 
-![Wwise Trigger Solution](media/MusicAsLevelDesign_WwiseTriggerSolution.jpeg)
+![Wwise Trigger Solution](A-Practice-of-Music-as-Level-Design-with-UE-Wwise/WwiseTriggerSolution.jpeg)
 
 如上图所示，使用 Trigger 功能进行实现的设计思路是：在 Stinger 声音片段（此处可以理解为是开始攻击时的武器 Whoosh 音效）中，调整 Sync Point 用于对齐 Music Track 中节拍点的 Custom Cue 标记信息，并在 Stinger 片段开头添加用于真正触发回调函数的 Custom Cue 标记信息。游戏运行过程中在任意时刻触发 Trigger，受 Trigger 控制的 Stinger 片段都将响应 Music Track 中下一个标记信息点，只要 Stinger 片段开头的标记信息能够被触发，那就验证此方案可行。
 
-![Wwise Trigger Solution Test](media/MusicAsLevelDesign_WwiseTriggerSolution_Test.png)
+![Wwise Trigger Solution Test](A-Practice-of-Music-as-Level-Design-with-UE-Wwise/WwiseTriggerSolution_Test.png)
 
 但是！在 UE 中使用 Blueprint 进行快速验证后发现，通过 PostEvent 的方式触发 Trigger，由 Trigger 控制的 Stinger 中包含的 Custom Cue 信息无法被获取；进一步研究 Wwise SDK 后发现，通过 PostTrigger 的方式直接触发 Trigger 也不可行，此函数并没有开放任何与回调函数相关的接口。
 
-![Wwise SDK PostTrigger](media/MusicAsLevelDesign_AkSoundEngine_PostTrigger.png)
+![Wwise SDK PostTrigger](A-Practice-of-Music-as-Level-Design-with-UE-Wwise/AkSoundEngine_PostTrigger.png)
 
 至此，尝试使用 Wwise Trigger 功能来实现“嵌套式”的 Custom Cue 触发回调函数的方式验证不可行。
 
 ## 那就自己动手写吧
 
-![Position On Track](media/MusicAsLevelDesign_PositionOnTrack.jpeg)
+![Position On Track](A-Practice-of-Music-as-Level-Design-with-UE-Wwise/PositionOnTrack.jpeg)
 
 既然上述方案无法实现，那就只能跳出现有思路框架，自己动手实现了，需要解决的核心问题就是如何实时地计算出调用 HandleAttack() 函数的时间点。而所谓的时间点对应到 Music Track 上其实就是播放位置（Play Position），因此函数调用时机的判断条件转化为算术表达式就是：  
 * 节拍点位置（Cue Position）- 当前播放位置（Current Position）< 武器充能时间长度（Charge Time Length）
@@ -69,7 +69,7 @@ Audiokinetic Wwise 2019.2.9
 
 ### 获取当前播放位置信息
 
-![Wwise SDK GetSourcePlayPosition](media/MusicAsLevelDesign_AkSoundEngine_GetSourcePlayPosition.png)
+![Wwise SDK GetSourcePlayPosition](A-Practice-of-Music-as-Level-Design-with-UE-Wwise/AkSoundEngine_GetSourcePlayPosition.png)
 
 配合使用 AkCallbackType 标志 `AK_EnableGetSourcePlayPosition`，`AK::SoundEngine::PostEvent` 返回当前播放声音片段的 `AkPlayingID`，将此 ID 传入 `AK::SoundEngine::GetSourcePlayPosition` 即可获得当前的播放位置。
 
@@ -114,7 +114,7 @@ CHECK_CALLBACK_TYPE_VALUE(EnableGetSourcePlayPosition);
 
 这样一来就能在 PostEvent 节点中的 Callback Mask 下拉菜单里选择 Enable Get Source Play Position 选项了。
 
-![PostEvent Callback Mask](media/MusicAsLevelDesign_Blueprint_PostEventCallbackMask.png)
+![PostEvent Callback Mask](A-Practice-of-Music-as-Level-Design-with-UE-Wwise/Blueprint_PostEventCallbackMask.png)
 
 ### 获取节拍点位置信息
 
@@ -142,7 +142,7 @@ struct FMusicCueStruct : public FTableRowBase
 };
 ```
 
-![MusicCue Data Table](media/MusicAsLevelDesign_MusicCueDataTable.png)
+![MusicCue Data Table](A-Practice-of-Music-as-Level-Design-with-UE-Wwise/MusicCueDataTable.png)
 
 考虑到仍然需要使用 Wwise State 来切换音乐片段，切换的同时需要加载对应片段的 MusicCue Data Table，因此需要创建 `MusicSegmentStruct.h` 和相对应的 MusicSegment Data Table，将 Wwise State 和 MusicCue Data Table 进行统一管理和调用。
 
@@ -172,7 +172,7 @@ struct FMusicSegmentStruct : public FTableRowBase
 };
 ```
 
-![MusicSegment Data Table](media/MusicAsLevelDesign_MusicSegmentDataTable.png)
+![MusicSegment Data Table](A-Practice-of-Music-as-Level-Design-with-UE-Wwise/MusicSegmentDataTable.png)
 
 最后，创建 `SetMusicStateToGetSegmentInfo()` 函数用于在 Blueprint 中配合 GetDataTableRow 节点来调取上述数据。
 
@@ -260,13 +260,13 @@ void AMainLevelManager::HandleEnemyAttackCueCallback(int32 AkPlayingID)
 
 ## 最终实现
 
-![Final UE Blueprint Implementation](media/MusicAsLevelDesign_BlueprintImplementation.png)
+![Final UE Blueprint Implementation](A-Practice-of-Music-as-Level-Design-with-UE-Wwise/BlueprintImplementation.png)
 
 如上图，在 Blueprint 中简单使用几个节点即可实现最终的设计需求。
 
 下图为整体的实现思路概览。
 
-![Final Solution Overview](media/MusicAsLevelDesign_SolutionOverview_S.jpeg)
+![Final Solution Overview](A-Practice-of-Music-as-Level-Design-with-UE-Wwise/SolutionOverview.jpeg)
 
 ## 总结
 
