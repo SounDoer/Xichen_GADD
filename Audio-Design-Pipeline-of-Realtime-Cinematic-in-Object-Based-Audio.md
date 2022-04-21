@@ -43,19 +43,28 @@ nav_exclude: true
 
 ## Object Based Audio
 
-Object Based Audio 并不是一个有着严格定义的行业术语，在不同语境和讨论范围下都有着各自不同的含义。下面仅从与本文案例有关的两个角度来做解释说明，一是游戏音频设计中的 Object Based 基本逻辑，二是 Wwise 中间件 2021.1 版本引入的 Audio Pipeline。
+Object Based Audio 并不是一个有着严格定义的行业术语，在不同语境和讨论范围下都有着各自不同的含义。下面仅从与本文案例有关的两个角度来做解释说明，一是游戏音频设计中的 Object Based 基本逻辑，二是 Wwise 中间件 2021.1 版本引入的 Object Based Audio Pipeline。
 
 ### Channel Based vs. Object Based
 
+声音重放技术从单声道、双声道立体声、多声道环绕声、三维环绕声等一路发展至今，是以不断增加声道数量的方式来营造更全面的沉浸感的。这种 Channel Based 的重放技术也决定了以电影为代表的线性媒体声音制作方式是直接围绕声道展开的，根据画面内容在数字音频工作站中的声轨上通过声像定位和音量调节等方式在时间轴上精细地控制每一时刻从各个声道中输出的声音内容，来模拟画面内容中各个元素与观众之间的方位与距离关系。  
+游戏音频的终端输出也需要考虑基于各种声道制式的重放设备，比如耳机、手机、电视机和家庭影院等。然而由于非线性和交互性的特点，导致游戏无法像电影那样通过输出多个确定版本的音轨来保证在各种设备上的重放效果，时间和空间上的不确定性决定了游戏中的声音内容输出需要以实时计算的方式来判断，因此在开发阶段的设计思路也与线性媒体声音制作有所不同，主要是 Object Based，而非 Channel Based。游戏音频设计中的 Listener（听者）和 Emitter（发声体）对象概念就是这种思路的典型体现，根据两者之间的相对关系来计算分配到终端重放设备各个声道的内容。  
+上文提到许多厂商都已有了 Object Based 相关的解决方案，以 Dolby Atmos 为代表的在 Channel Based 线性内容制作流程中引入 Audio Object 的思路，其实就是在向游戏天然的音频设计逻辑看齐，尽可能摆脱声道因素对声音内容的影响。所以对于游戏中的实时动画而言，可以充分发挥游戏音频设计的先天优势，以 Objcet Based 的方式来完成这些线性内容的音频设计。
+
+
+
 意义在于
 
-### Wwise Object-Based Audio
+### Wwise Object-Based Audio Pipeline
 
 https://blog.audiokinetic.com/working-with-object-based-audio/
 https://blog.audiokinetic.com/authoring-for-audio-objects-in-wwise/
 https://www.audiokinetic.com/library/edge/?source=Help&id=object_based_audio_overview
 
 https://games.dolby.com/atmos/wwise/
+
+
+需要补充说明，目前的实际效果
 
 ## Audio Design Pipeline
 
@@ -66,6 +75,10 @@ https://games.dolby.com/atmos/wwise/
 前后数据量对比
 
 ### 改进
+
+## 未来
+
+### 基于对象音频的线性媒体音频制作工具
 
 希辰  
 2022.3.29
