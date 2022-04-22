@@ -13,10 +13,13 @@ nav_exclude: true
 	* [The Specifications of Cinematic Sound](#the-specifications-of-cinematic-sound)
 * [Object Based Audio](#object-based-audio)
 	* [Channel Based vs. Object Based](#channel-based-vs-object-based)
-	* [Wwise Object-Based Audio](#wwise-object-based-audio)
+	* [Wwise Object-Based Audio Pipeline](#wwise-object-based-audio-pipeline)
 * [Audio Design Pipeline](#audio-design-pipeline)
+	* [细节处理](#细节处理)
 	* [数据对比](#数据对比)
 	* [改进](#改进)
+* [未来](#未来)
+	* [基于对象音频的线性媒体音频制作工具](#基于对象音频的线性媒体音频制作工具)
 
 <!-- End Document Outline -->
 
@@ -53,16 +56,10 @@ Object Based Audio 并不是一个有着严格定义的行业术语，在不同�
 
 ### Wwise Object-Based Audio Pipeline
 
-Wwise 音频中间件在 2021.1 版本中
+Wwise 音频中间件在 2021.1 版本中引入了[针对 Audio Object 的新管线](https://blog.audiokinetic.com/authoring-for-audio-objects-in-wwise/)，定义了 Audio Objects、Main Mix 和 Passthrough Mix 三种输出通道，同时开放了更多有关 Audio Devices 的属性控制。这些新功能的引入让音频设计师在开发阶段对最终重放环节的实际效果有了更多的评估和控制，在保留原有信号流结构的同时，加入了对支持 Audio Object 重放设备的适配。
 
-https://blog.audiokinetic.com/working-with-object-based-audio/
-https://blog.audiokinetic.com/authoring-for-audio-objects-in-wwise/
-https://www.audiokinetic.com/library/edge/?source=Help&id=object_based_audio_overview
-
-https://games.dolby.com/atmos/wwise/
-
-
-需要补充说明，目前的实际效果
+《SYNCED: Off-Planet》项目也在第一时间升级了中间件版本，并测试和实装了上述新功能。具体开发细节就不在本文展开了，之后有机会可以另起一文。感兴趣的朋友可以直接查阅[官方文档](https://www.audiokinetic.com/library/edge/?source=Help&id=object_based_audio_overview)。  
+需要说明的是，仅从有限的主观评测结果来看，PC 平台上使用耳机配合 Windows Sonic for Headphones 或 Dolby Atmos for Headphones 设置的实际效果还不是很理想，与常规重放模式相比低频成分会有明显缺失，原因大概是因为通过立体声耳机回放会经过这些设置中的自动 Binaural 处理，这一部分的效果提升还需要各个厂商在用户终端环节提供更加细致的个性化配置，比如快速准确的个人 HRTF 生成方式等，以及。尽管如此，《SYNCED: Off-Planet》项目中还是应用了这些新功能，希望能给愿意尝新和有多声道重放条件的玩家们多一个选择。
 
 ## Audio Design Pipeline
 
