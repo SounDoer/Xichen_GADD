@@ -22,6 +22,7 @@ permalink: /
 * [“音频可视化” UE & Wwise 实践案例](A-Practice-of-Audio-Visualization-with-UE-Wwise.md)
 * [冷兵器 Procedural Whoosh 音频设计案例](A-Procedural-Way-of-Melee-Weapon-Whoosh-Sound-Design.md)
 * [基于听者的动态风声设计](Listener-Centered-Dynamic-Wind-Audio-Design.md)
+* [基于对象音频的实时动画音频设计流程](Audio-Design-Pipeline-of-Realtime-Cinematic-in-Object-Based-Audio.md)
 
 ***
 
