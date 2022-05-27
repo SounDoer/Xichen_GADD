@@ -23,7 +23,7 @@ nav_exclude: true
 <!-- End Document Outline -->
 ***
 
-[Project Acoustics](https://docs.microsoft.com/en-us/gaming/acoustics/what-is-acoustics) 是 Microsoft 的一个声学效果实现方案，用于在游戏等 3D 交互项目中实现 Occlusion、Obstruction 和 Reverb 等效果。该方案最早源自研究项目 [Project Triton](https://www.microsoft.com/en-us/research/project/project-triton/)，发展至今已有十多年，也已在一些游戏项目中经过验证。之前在[《展望游戏音频设计的发展方向》](What-will-The-Next-Gen-of-Game-Audio-Design-be-like.md)文中的声学环境建模（Acoustic Environment Modeling）章节中做过简单介绍，最近[该方案](https://www.unrealengine.com/marketplace/en-US/product/project-acoustics-for-unreal-audio)以 Engine Plugin 的形式发布至 UE 商城，正式支持 UE5 版本，整合流程和设计功能与之前相比也有了较大的改进，趁此时机正好对 Project Acoustics 做一个全面深入的测评。
+[Project Acoustics](https://docs.microsoft.com/en-us/gaming/acoustics/what-is-acoustics) 是 Microsoft 的一个声学效果实现方案，用于在游戏等 3D 交互项目中实现 Occlusion、Obstruction 和 Reverb 等效果。该方案最早源自研究项目 [Project Triton](https://www.microsoft.com/en-us/research/project/project-triton/)，发展至今已有十多年，也已在一些游戏项目中经过验证。之前在[《展望游戏音频设计的发展方向》](What-will-The-Next-Gen-of-Game-Audio-Design-be-like.md)文中的“声学环境建模”章节中做过简单介绍，最近[该方案](https://www.unrealengine.com/marketplace/en-US/product/project-acoustics-for-unreal-audio)以 Engine Plugin 的形式发布至 UE 商城，正式支持 UE5 版本，整合流程和设计功能与之前相比也有了较大的改进，趁此时机正好对 Project Acoustics 做一个全面深入的测评。
 
 ## What is Project Acoustics
 
@@ -44,6 +44,8 @@ nav_exclude: true
 
 ### Plugin Integration
 
+
+[Project Acoustics Unreal Audio Plugin Integration](https://docs.microsoft.com/en-us/gaming/acoustics/unreal-audio-integration)
 
 ### Bake Process
 
