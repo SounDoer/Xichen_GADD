@@ -58,23 +58,19 @@ Project Acoustics for Unreal Audio 3.0.316
 
 1. Objects  
 批量选择并标记场景中需要参与声学模拟计算的对象，支持 Static Mesh、Navigation Mesh 和 Landscape 类型。只有类型正确的被标记对象才会参与到后续的计算中。
-
 ![Project Acoustics Bake Process - Objects](Microsoft-Project-Acoustics-Wave-Physics-Simulation-Playtest/ProjectAcoustics_BakeProcess_Objects.png)
 
 2. Materials  
 被标记对象使用到的所有 Materials 在此列出，根据需要选择材质吸声预设或者自定义数值，数值越大吸声效果越明显，混响效果也相应越少。预设中的数值参考自真实材料的吸声属性。
-
 ![Project Acoustics Bake Process - Materials](Microsoft-Project-Acoustics-Wave-Physics-Simulation-Playtest/ProjectAcoustics_BakeProcess_Materials.png)
 
 3. Probes  
 选择模拟精度、数据命名前缀和输出路径，点击 Calculate 后将会显示当前场景所需要的 Probe 数量，并在输出路径中生成用于下一步 Bake 的 .vox 和 _config.xml 文件。每一个 Probe 代表了对该场景中听者可能所处位置的采样，因此 Probe 的数量直接影响下一步 Bake 所需要的时间，以及最终模拟效果的精度。如有需要可以显示高级参数，调整 Probe 的间隔距离和覆盖范围等参数，再次 Calculate 获得新的数据。
-
 ![Project Acoustics Bake Process - Probes](Microsoft-Project-Acoustics-Wave-Physics-Simulation-Playtest/ProjectAcoustics_BakeProcess_Probes.png)
 
 4. Bake  
 目前有两种 Bake 方式可供选择：一是使用 Microsoft Azure 云服务，需要创建相应账户并完成服务器配置；二是下载相应工具，执行 Local Bake。  
 本例使用 Local Bake 方式，测试关卡地图大小是 50m * 50m，Probe 数量为 219 个，CPU 型号 Intel Core i9-9900 3.10GHz，整个 Bake 过程耗时约 26 分钟，最终生成的 .ace 文件数据大小约为 3.68MB。
-
 ![Project Acoustics Bake Process - Bake](Microsoft-Project-Acoustics-Wave-Physics-Simulation-Playtest/ProjectAcoustics_BakeProcess_Bake.png)
 
 以上就是整个 Bake 过程，有关各个步骤中的具体操作和参数说明请参考官方文档 [Project Acoustics Unreal Bake Overview](https://docs.microsoft.com/en-us/gaming/acoustics/unreal-baking-overview)。  在上述自动化生成的基础上，工具还提供了一些用于进一步[手动调整的组件](https://docs.microsoft.com/en-us/gaming/acoustics/unreal-baking-advanced)。
