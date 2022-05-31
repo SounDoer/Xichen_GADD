@@ -12,11 +12,8 @@ nav_exclude: true
 * [Workflow](#workflow)
 	* [Plugin Integration](#plugin-integration)
 	* [Bake Process](#bake-process)
-		* [Objects](#objects)
-		* [Materials](#materials)
-		* [Probes](#probes)
-		* [Bake](#bake)
 	* [Design Control](#design-control)
+		* [Reverb Effect](#reverb-effect)
 		* [Dynamic Portal](#dynamic-portal)
 * [Playtest Conclusion](#playtest-conclusion)
 
@@ -61,7 +58,7 @@ Project Acoustics for Unreal Audio 3.0.316
 
 ![]()
 
-批量选择并标记场景中需要参与声学模拟计算的对象，目前支持 Static Mesh、Navigation Mesh 和 Landscape 类型。只有类型正确的被标记对象才会参与到后续的计算中。
+批量选择并标记场景中需要参与声学模拟计算的对象，支持 Static Mesh、Navigation Mesh 和 Landscape 类型。只有类型正确的被标记对象才会参与到后续的计算中。
 
 2. Materials
 
@@ -80,20 +77,44 @@ Project Acoustics for Unreal Audio 3.0.316
 目前有两种 Bake 方式可供选择：一是使用 Microsoft Azure 云服务，需要创建相应账户并完成服务器配置；二是下载相应工具，执行 Local Bake。  
 本例使用 Local Bake 方式，测试关卡地图大小是 50m * 50m，Probe 数量为 219 个，CPU 型号 Intel Core i9-9900 3.10GHz，整个 Bake 过程耗时约 26 分钟，最终生成的 .ace 文件数据大小约为 3.68MB。
 
-
 ![]()
+
+以上就是整个 Bake 过程，有关各个步骤中的具体操作和参数说明请参考官方文档 [Project Acoustics Unreal Bake Overview](https://docs.microsoft.com/en-us/gaming/acoustics/unreal-baking-overview)。  在上述自动化生成的基础上，工具还提供了一些用于进一步[手动调整的组件](https://docs.microsoft.com/en-us/gaming/acoustics/unreal-baking-advanced)。
 
 ### Design Control
 
+将 Bake 生成的 .ace 文件导入至工程项目的指定路径 Content/Acoustics 下并创建相应的 .uasset，然后将其添加到在场景中放置的 Acoustics Space 对象中。在声源 Sound Attenuation 的 Source Data Override Plugin Settings 中创建并添加 Acoustics Source Data Override Source Settings 对象，这一对象包含了基于模拟数据提取的可控设计参数：  
+
+- Occlusion Multiplier: Occlusion 效果调整
+- Wetness Adjustment: 额外的混响效果响度值调整
+- Decay Time Multiplier: 基于模拟数据的 RT60 值调整
+- Outdoorness Adjustment: 室外/室内混响感的调整
+- Distance Warp: 不影响直达声前提下对混响远近的调整
+
+除了针对每个声源的设计控制之外，在场景内的 Acoustics Space 对象中也有一套相同的用于全局控制的设计参数，以及针对区域调整的 Acoustics Runtime Volume 对象中也有同样的设计参数。
+
+更详细的操作和参数说明请参考官方文档 [Project Acoustics Unreal Audio Design Tutorial](https://docs.microsoft.com/en-us/gaming/acoustics/unreal-audio-design)。
+
+#### Reverb Effect
+
+混响效果的实现利用了 UE 原生的 Submix 和 Submix Effect 系统。编辑器 Project Settings 中的 Plugins - Project Acoustics 界面中显示了默认的 Reverb Bus 预设，可以使用自定义设置覆盖。混响系统有 Indoor 和 Outdoor 两个部分，各自包含了 Short、Medium 和 Long 三条 Submix，各个 Submix 中使用了不同 IR 的 Convolution Reverb 效果器。
+
+![]()
+
 #### Dynamic Portal
 
+Project Acoustics 2.0 版本中加入了 [Dynamic Openings 功能](https://docs.microsoft.com/en-us/gaming/acoustics/unreal-beta)，用于实现门窗之类的动态 Portal，目前 3.0 版本中还处于 Beta 阶段。  
+Bake 开始之前，在场景中的门窗对象中添加 Acoustics Dynamic Opening 组件，调整大小覆盖门窗尺寸，创建比率变量用于指示开合大小，并驱动 Acoustics Dynamic Opening 组件中的 Dry Attenuation、Wet Attenuation 和 Filtering 参数。Acoustics Dynamic Opening 组件所处位置在 Bake 过程中将会被标记；运行时，如果声源与听者之间的最短距离穿过该位置时，该组件就会响应门窗开合变化，并实时调整声源干湿声的响度。
+
+![]()
 
 ## Playtest Conclusion
 
+附上本例测试关卡的[视频演示](https://www.youtube.com/watch?v=lANptxJ49yI)，主要以距离衰减、障碍物掩蔽和动态门窗等效果的功能性测试为主，整体效果还是非常不错的。
 
-最后，推荐观看
+Projec Acoustics 直接利用场景已有的几何结构和材质种类进行离线声学渲染的方式，大大减少了音频设计师根据美术场景再次搭建简化声学结构的工作量，同时对复杂几何环境也能有更精确的模拟。本例测试关卡场景比较简单，实际性能方面不太有说服力，仅仅以此做一个简单估算，地图尺寸极限放大一百倍之后的模拟数据文件大小约在几百 MB 级别，运行时也提供了 Auto Stream 的方式来控制内存消耗，这些指标在优化之后应该都能在可接受范围之内。与现有的 Room & Portal 方式相比，Project Acoustics 在设计控制方面的自由度肯定要小一些，主要还是侧重基于真实声学的模拟还原，因此更适合那些有 3D 场景的写实风格项目。另外，虽然 Bake 过程减少了人工搭建声学结构的工作量，但是 Bake 本身还是一个比较耗时的过程，特别是对于较大地图尺寸的项目来说，即使是有性能更快的云服务支持，在需要快速迭代验证的工作流程中可能还是有些繁琐。
 
-
+最后，推荐观看 UE 官方的这一期 Inside Unreal 视频 [Microsoft Project Acoustics UE5 Marketplace Plugin](https://www.youtube.com/watch?v=3uocCX0AMIg)，邀请了 Microsoft Project Acoustics 团队在线讨论开发细节和工程演示。
 
 希辰  
 2022.5.22
