@@ -112,9 +112,9 @@ Bake 开始之前，在场景中的门窗对象中添加 Acoustics Dynamic Openi
 
 附上本例测试关卡的[视频演示](https://www.youtube.com/watch?v=lANptxJ49yI)，主要以距离衰减、障碍物掩蔽和动态门窗等效果的功能性测试为主，整体效果还是非常不错的。
 
-Projec Acoustics 直接利用场景已有的几何结构和材质种类进行离线声学渲染的方式，大大减少了音频设计师根据美术场景再次搭建简化声学结构的工作量，同时对复杂几何环境也能有更精确的模拟。本例测试关卡场景比较简单，实际性能方面不太有说服力，仅仅以此做一个简单估算，地图尺寸极限放大一百倍之后的模拟数据文件大小约在几百 MB 级别，运行时也提供了 Auto Stream 的方式来控制内存消耗，这些指标在优化之后应该都能在可接受范围之内。与现有的 Room & Portal 方式相比，Project Acoustics 在设计控制方面的自由度肯定要小一些，主要还是侧重基于真实声学的模拟还原，因此更适合那些有 3D 场景的写实风格项目。另外，虽然 Bake 过程减少了人工搭建声学结构的工作量，但是 Bake 本身还是一个比较耗时的过程，特别是对于较大地图尺寸的项目来说，即使是有性能更快的云服务支持，在需要快速迭代验证的工作流程中可能还是有些繁琐。
+Projec Acoustics 直接利用场景已有的几何结构和材质种类进行离线声学渲染的方式，大大减少了音频设计师根据美术场景再次搭建简化声学结构的工作量，同时对复杂几何环境也能有更精确的模拟。本例测试关卡场景比较简单，实际性能方面不太有说服力，仅仅以此做一个简单估算，地图尺寸极限放大一百倍之后的模拟数据文件大小约在几百 MB 级别，运行时也提供了 Auto Stream 的方式来控制内存消耗，这些指标在优化之后应该都能在可接受范围之内。与现有的 Room & Portal 方式相比，Project Acoustics 在设计控制方面的自由度肯定要小一些，主要还是侧重基于真实声学的模拟还原，因此更适合那些有 3D 场景的写实风格项目。另外，虽然 Bake 过程减少了人工搭建声学结构的工作量，但是 Bake 本身还是一个比较耗时的过程，特别是对于较大地图尺寸的项目来说，即使是有性能更快的云服务支持，在需要快速迭代验证的工作流程中可能还是有些繁琐。总的来说，Project Acoustics 开发至目前 3.0 版本，在各方面都已成熟可用，期待能在下一个项目中有更多的探索尝试。
 
-最后，推荐观看 UE 官方的这一期 Inside Unreal 视频 [Microsoft Project Acoustics UE5 Marketplace Plugin](https://www.youtube.com/watch?v=3uocCX0AMIg)，邀请了 Microsoft Project Acoustics 团队在线讨论开发细节和工程演示。
+最后，推荐观看 UE 官方的这一期 Inside Unreal 视频 [Microsoft Project Acoustics UE5 Marketplace Plugin](https://www.youtube.com/watch?v=3uocCX0AMIg)，邀请了 Microsoft Project Acoustics 团队在线展示示例工程和讨论开发细节。
 
 希辰  
 2022.5.22
