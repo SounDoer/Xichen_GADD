@@ -11,6 +11,14 @@ nav_exclude: true
 <!-- End Document Outline -->
 ***
 
+Intro
+Who is this course for?
+What you can expect from this course?
+What is expected from you?
+Materials: Video Links and PDF Download
+Support:
+Who am I?
+
 数字音频
 游戏音频设计概述，历史发展与行业现状，工种与工序
 游戏音频美学与艺术价值
