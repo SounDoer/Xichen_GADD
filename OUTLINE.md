@@ -19,6 +19,12 @@ Materials: Video Links and PDF Download
 Support:
 Who am I?
 
+
+声音的分类：
+Voice、Music、Sound Effect
+Systemic、Map Specific
+
+
 数字音频
 游戏音频设计概述，历史发展与行业现状，工种与工序
 游戏音频美学与艺术价值
