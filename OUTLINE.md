@@ -25,6 +25,12 @@ Voice、Music、Sound Effect
 Systemic、Map Specific
 
 
+Convention:
+1. Follow object behavior logic, not visual
+SFX parallel with VFX, not sub of it
+
+
+
 数字音频
 游戏音频设计概述，历史发展与行业现状，工种与工序
 游戏音频美学与艺术价值
