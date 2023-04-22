@@ -9,7 +9,7 @@ permalink: /
 
 ***
 
-以专题文章的形式分享我对游戏音频设计的严肃思考，持续更新中。
+以专题文章的形式分享我对游戏音频设计的思考与探索，持续更新中。
 
 - [前言](Preface.md)
 - [如何搜索有关音频设计的资讯](How-to-Search-Audio-Design-Information.md)
