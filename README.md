@@ -25,20 +25,7 @@ permalink: /
 - [基于对象音频的实时动画音频设计流程](Audio-Design-Pipeline-of-Realtime-Cinematic-in-Object-Based-Audio.md)
 - [Microsoft Project Acoustics 声波物理模拟测试](Microsoft-Project-Acoustics-Wave-Physics-Simulation-Playtest.md)
 
-***
-
-Xichen Shen
-
-Apr 2019 - Present, Audio Designer at NExT Studios  
-Synced Off Planet
-
-Aug 2015 - Apr 2019, Audio Designer at Ubisoft Shanghai  
-Far Cry Primal  
-Far Cry 5  
-Far Cry 5 DLC: Lost On Mars  
-Far Cry 5 DLC: Hours of Darkness  
-Far Cry New Dawn  
-
-Contact: xichen@soundoer.com
+Xichen Shen  
+[SounDoer.com](http://soundoer.com/)
 
 ***
