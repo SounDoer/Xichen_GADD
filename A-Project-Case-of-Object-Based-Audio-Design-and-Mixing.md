@@ -32,6 +32,11 @@ Performance Optimization
 开发流程
 Wwise structure details
 
+静态混音
+动态混音：Mixing Preset / Game Parameter Control
+
+Mastering: according to devices, scene and style
+
 ## Sub Title A
 
 [Link](https://en.wikipedia.org/wiki/Cutscene)
