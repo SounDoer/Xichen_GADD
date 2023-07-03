@@ -8,6 +8,7 @@ nav_exclude: true
 ***
 <!-- Start Document Outline -->
 
+* [What is Object-Based Audio and Why?](#what-is-object-based-audio-and-why)
 * [Sub Title A](#sub-title-a)
 	* [Sub Title B](#sub-title-b)
 
@@ -18,7 +19,9 @@ nav_exclude: true
 
 ## What is Object-Based Audio and Why?
 
-
+3D Audio、Spatial Audio、Immersive Audio、Binaural Audio 等诸如此类的音频术语，大家肯定都有听说过，笼统地来说这些词多少都透露着同一个的含义，就是更高级的声音体验，尽管 Object-Based Audio 这个概念与上述这些词都有联系，但在具体的专业讨论语境中还是有其自身特殊的定义的。  
+从设计概念上来说，Object-Based 与之相对的是 Channel-Based。主流的立体声和多声道环绕声等音频格式和重放技术，是以不断增加声道数量的方式来提升沉浸效果的，绝大多数线性媒体的声音制作如音乐和电影都是围绕 Channel-Based 声道展开的，通过声像定位和音量调节等方式在时间轴上精细地控制每一时刻从各个声道中输出的声音内容，来模拟声音从各个方位传来的角度与距离。而
+狭义来说，是指 Wwise 在 2021 版本中引入的 Object-Based Audio Pipeline，配合终端设备来实现上述所说的音频信号回放方式
 
 概念澄清
 Spatial Audio
