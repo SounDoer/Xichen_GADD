@@ -20,13 +20,11 @@ nav_exclude: true
 ## What is Object-Based Audio and Why?
 
 3D Audio、Spatial Audio、Immersive Audio、Binaural Audio 等诸如此类的音频术语，大家肯定都有听说过，笼统地来说这些词多少都透露着同一个的含义，就是更高级的声音体验，尽管 Object-Based Audio 这个概念与上述这些词都有联系，但在具体的专业讨论语境中还是有其自身特殊的定义的。  
-从设计概念上来说，Object-Based 与之相对的是 Channel-Based。主流的立体声和多声道环绕声等音频格式和重放技术，是以不断增加声道数量的方式来提升沉浸效果的，绝大多数线性媒体的声音制作如音乐和电影都是围绕 Channel-Based 声道展开的，通过声像定位和音量调节等方式在时间轴上精细地控制每一时刻从各个声道中输出的声音内容，来模拟声音从各个方位传来的角度与距离。而
+从设计概念上来说，Object-Based 与之相对的是 Channel-Based。主流的立体声和多声道环绕声等音频格式和重放技术，是以不断增加声道数量的方式来提升沉浸效果的，通过声像定位和音量调节等方式在时间轴上精细地控制每一时刻从各个声道中输出的声音内容，来模拟声音从各个方位传来的角度与距离，绝大多数线性媒体的声音制作如音乐和电影都是围绕 Channel-Based 声道展开的。而游戏作为一种交互媒体，时间和空间上的不确定性决定了声音内容在各个声道中的输出是需要根据 Listener（听者）和 Emitter（发声体）之间的相对关系进行实时计算来判断的，因此游戏音频设计在资源制作、数据整合以及混音等环节通常是以 Object-Based 基于对象的逻辑展开的。  
+从声音重放技术的角度来说，目前的 Object-Based Audio 方案是在已有 Channel-Based 格式标准的基础上，增加相对独立的、包含声音定位元信息的 Audio Object（音频对象），交由终端设备来进行空间化计算，并根据终端的声道数目和配置来自适应地分配声音信号的输出，提供更加精确的声音定位效果。以 Dolby Atmos 为代表的实现方案在电影声音行业已经有了非常广泛的应用；而在游戏音频领域，PC 和主机平台也都有相应的解决方案，比如 Windows 10 系统原生 Windows Sonic，PlayStation5 3D Audio 以及第三方产品 Dolby Access 和 DTS Sound Unbound 等。  
+在开发工具方面，
 狭义来说，是指 Wwise 在 2021 版本中引入的 Object-Based Audio Pipeline，配合终端设备来实现上述所说的音频信号回放方式
 
-概念澄清
-Spatial Audio
-Object Based Audio
-Dolby Atmos
 
 目的
 Endpoint OBA Realization
@@ -55,7 +53,14 @@ Mastering: according to devices, scene and style
 ![PicLink](Audio-Design-Pipeline-of-Realtime-Cinematic-in-Object-Based-Audio/RealtimeCinematic.png)
 
 
+## Reference
+
+- [AK Wwise - How Audio Objects Improve Spatial Accuracy](https://blog.audiokinetic.com/en/how-audio-objects-improve-spatial-accuracy)
+- [AK Wwise - Authoring for Audio Objects in Wwise](https://blog.audiokinetic.com/en/authoring-for-audio-objects-in-wwise)
+- [AK Wwise - Understanding Object-Based Audio](https://www.audiokinetic.com/en/library/edge/?source=Help&id=object_based_audio_overview)
+- [Dolby Games - Get Started with Dolby Atmos](https://games.dolby.com/atmos)
+
 希辰  
-2022.3.29
+2023.7.1
 
 ***
