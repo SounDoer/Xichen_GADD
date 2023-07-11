@@ -10,11 +10,11 @@ nav_exclude: true
 
 * [What is Object-Based Audio and Why?](#what-is-object-based-audio-and-why)
 * [The Pipeline & Workflow](#the-pipeline--workflow)
-	* [Enable Spatial Sound On PC](#enable-spatial-sound-on-pc)
+	* [Enable Spatial Sound For Development](#enable-spatial-sound-for-development)
 	* [Bus Structure & Device Config](#bus-structure--device-config)
 	* [Sound Asset & Positioning](#sound-asset--positioning)
 	* [Mixing in Cinema](#mixing-in-cinema)
-	* [Audio Setting in Game On Endpoint](#audio-setting-in-game-on-endpoint)
+	* [Audio Setting in Game](#audio-setting-in-game)
 * [Conclusion](#conclusion)
 * [Reference](#reference)
 
@@ -32,7 +32,10 @@ nav_exclude: true
 
 ## The Pipeline & Workflow
 
-### Enable Spatial Sound On PC
+UE 4.25
+Wwise 2021.1.9
+
+### Enable Spatial Sound For Development
 
 ### Bus Structure & Device Config
 
@@ -51,6 +54,8 @@ attenuation
 
 positioning methods
 
+Audio Object Preview
+
 ### Mixing in Cinema
 
 Mastering: according to devices, scene and style
@@ -58,7 +63,7 @@ Mastering: according to devices, scene and style
 静态混音
 动态混音：Mixing Preset / Game Parameter Control
 
-### Audio Setting in Game On Endpoint
+### Audio Setting in Game
 
 [Link](https://en.wikipedia.org/wiki/Cutscene)
 
