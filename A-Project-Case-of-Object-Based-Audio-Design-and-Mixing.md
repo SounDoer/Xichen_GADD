@@ -10,13 +10,13 @@ nav_exclude: true
 
 * [What is Object-Based Audio and Why?](#what-is-object-based-audio-and-why)
 * [The Pipeline & Workflow](#the-pipeline--workflow)
-	* [Enable Spatial Sound For Development](#enable-spatial-sound-for-development)
-	* [Bus Structure & Device Config](#bus-structure--device-config)
-	* [Sound Asset & Positioning](#sound-asset--positioning)
-	* [Mixing in Cinema](#mixing-in-cinema)
-	* [Audio Setting in Game](#audio-setting-in-game)
+	* [Asset Production](#asset-production)
+	* [Sound Positioning](#sound-positioning)
+	* [Bus Structure](#bus-structure)
+	* [Audio Device Config](#audio-device-config)
+	* [User-End Setup](#user-end-setup)
 * [Conclusion](#conclusion)
-* [Reference](#reference)
+* [For More Information](#for-more-information)
 
 <!-- End Document Outline -->
 ***
@@ -32,46 +32,48 @@ nav_exclude: true
 
 ## The Pipeline & Workflow
 
+![Object-Based-Audio-Design-and-Mixing](A-Project-Case-of-Object-Based-Audio-Design-and-Mixing/Object-Based-Audio-Design-and-Mixing.png)
+
+```
 UE 4.25
 Wwise 2021.1.9
+```
 
-### Enable Spatial Sound For Development
+### Asset Production
 
-### Bus Structure & Device Config
+![Asset Production](A-Project-Case-of-Object-Based-Audio-Design-and-Mixing/Object-Based-Audio-Design-and-Mixing_01.png)
 
-bus structure
-
-audio device
-
-ue audio device setup bp
-
-### Sound Asset & Positioning
-
-ingame object
-cinematic
+### Sound Positioning
 
 attenuation
 
 positioning methods
 
+![Sound Positioning](A-Project-Case-of-Object-Based-Audio-Design-and-Mixing/Object-Based-Audio-Design-and-Mixing_02.png)
+
 Audio Object Preview
 
-### Mixing in Cinema
+![Audio Object Profiling](A-Project-Case-of-Object-Based-Audio-Design-and-Mixing/Object-Based-Audio-Design-and-Mixing_03.png)
 
-Mastering: according to devices, scene and style
+### Bus Structure
 
-静态混音
-动态混音：Mixing Preset / Game Parameter Control
+![Bus Structure](A-Project-Case-of-Object-Based-Audio-Design-and-Mixing/Object-Based-Audio-Design-and-Mixing_04.png)
 
-### Audio Setting in Game
+![Bus Mixing Control](A-Project-Case-of-Object-Based-Audio-Design-and-Mixing/Object-Based-Audio-Design-and-Mixing_05.png)
 
-[Link](https://en.wikipedia.org/wiki/Cutscene)
+### Audio Device Config
 
-![PicLink](Audio-Design-Pipeline-of-Realtime-Cinematic-in-Object-Based-Audio/RealtimeCinematic.png)
+![Audio Device Shareset](A-Project-Case-of-Object-Based-Audio-Design-and-Mixing/Object-Based-Audio-Design-and-Mixing_06.png)
+
+![Audio Output Config](A-Project-Case-of-Object-Based-Audio-Design-and-Mixing/Object-Based-Audio-Design-and-Mixing_07.png)
+
+### User-End Setup
+
+![User-End Setup](A-Project-Case-of-Object-Based-Audio-Design-and-Mixing/Object-Based-Audio-Design-and-Mixing_08.png)
 
 ## Conclusion
 
-## Reference
+## For More Information
 
 - [Spatial Sound for App Developers for Windows, Xbox, and Hololens 2](https://learn.microsoft.com/en-us/windows/win32/coreaudio/spatial-sound)
 - [AK Wwise - How Audio Objects Improve Spatial Accuracy](https://blog.audiokinetic.com/en/how-audio-objects-improve-spatial-accuracy)
