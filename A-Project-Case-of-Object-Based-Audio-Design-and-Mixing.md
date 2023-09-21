@@ -34,12 +34,16 @@ nav_exclude: true
 
 ![Object-Based-Audio-Design-and-Mixing](A-Project-Case-of-Object-Based-Audio-Design-and-Mixing/Object-Based-Audio-Design-and-Mixing.png)
 
+上图是针对 Object-Based Audio 设计和混音的概览，主要是开发流程和用户端设置两个部分，其中开发流程包含了资源制作、声音定位、总线结构和音频设备配置四个环节。
+
 ```
 UE 4.25
 Wwise 2021.1.9
 ```
 
 ### Asset Production
+
+
 
 ![Asset Production](A-Project-Case-of-Object-Based-Audio-Design-and-Mixing/Object-Based-Audio-Design-and-Mixing_01.png)
 
