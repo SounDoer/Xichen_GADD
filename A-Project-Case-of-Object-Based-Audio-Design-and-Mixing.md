@@ -43,7 +43,7 @@ Wwise 2021.1.9
 
 ### Asset Production
 
-
+从声音资源的规格来看，除了部分全景声混音格式的音乐和 Quad 四声道的铺底环境声资源之外，游戏内绝大多数声音资源都以单声道和立体声格式为主。即使是线性的影视化内容和过场动画，也没有采取
 
 ![Asset Production](A-Project-Case-of-Object-Based-Audio-Design-and-Mixing/Object-Based-Audio-Design-and-Mixing_01.png)
 
