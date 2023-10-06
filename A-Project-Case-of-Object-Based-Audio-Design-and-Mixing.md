@@ -49,13 +49,11 @@ Wwise 2021.1.9
 
 ### Sound Positioning
 
-attenuation
-
-positioning methods
+接上一环节，DAW 中制作并输出声音资源之后，音频中间件 Wwise 需要完成声音的定位与混音。除了根据声音类型创建 Attenuation 预设并绑定游戏对象的常规方式之外，还可以使用 Speaker Panning Steering 和 3D Position Automation 功能，在 XYZ 三维空间和路径上设计声音定位的效果。比如线性的影视化内容，可以在 Wwise 中以 Listener/Camera 为中心快速地调整预览，灵活地针对每个声音片段做出精细的自定义声像定位。
 
 ![Sound Positioning](A-Project-Case-of-Object-Based-Audio-Design-and-Mixing/Object-Based-Audio-Design-and-Mixing_02.png)
 
-Audio Object Preview
+同时 Audio Object Profiler 中可以实时观测送入 Audio Object 总线的声源 Emitter 以 Listener 为中心的相对位置和路径轨迹，用于估计实际声音的听感方位。
 
 ![Audio Object Profiling](A-Project-Case-of-Object-Based-Audio-Design-and-Mixing/Object-Based-Audio-Design-and-Mixing_03.png)
 
