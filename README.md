@@ -24,6 +24,7 @@ permalink: /
 - [基于听者的动态风声设计](Listener-Centered-Dynamic-Wind-Audio-Design.md)
 - [基于对象音频的实时动画音频设计流程](Audio-Design-Pipeline-of-Realtime-Cinematic-in-Object-Based-Audio.md)
 - [Microsoft Project Acoustics 声波物理模拟测试](Microsoft-Project-Acoustics-Wave-Physics-Simulation-Playtest.md)
+- [Object-Based Audio 音频设计与混音案例](A-Project-Case-of-Object-Based-Audio-Design-and-Mixing.md)
 
 Xichen Shen  
 [SounDoer.com](http://soundoer.com/)
