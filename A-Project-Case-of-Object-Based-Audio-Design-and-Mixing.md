@@ -15,13 +15,12 @@ nav_exclude: true
 	* [Bus Structure](#bus-structure)
 	* [Audio Device Config](#audio-device-config)
 	* [User-End Setup](#user-end-setup)
-* [Conclusion](#conclusion)
 * [For More Information](#for-more-information)
 
 <!-- End Document Outline -->
 ***
 
-作为一款支持 PC 和主机平台的第三人称射击游戏，[《SYNCED》](https://www.syncedthegame.com/)在项目早期就确定了高规格的音频交付标准，在保证绝大多数玩家使用耳机的听感效果的同时，还需要适配立体声、多声道环绕声以及带有顶置音箱的影院级配置的各种听音环境。音频中间件 Wwise 在 2021 版本中引入了 Object-Based Audio Pipeline（基于对象音频的管线），配合各个厂商如 Dolby 和 Sony 等在终端设备上提供了更多的渲染支持，《SYNCED》音频组也在第一时间跟进，对项目音频结构和工作管线进行了改造，利用新的工具在各类终端和回放环境下实现高规格的音频交付标准。趁此游戏即将上线之际，本文将以《SYNCED》项目为例，从 Object-Based Audio（以下简称 OBA）这个核心概念出发，分享一下在资源制作、声音定位、管线结构和混音策略等方面的工作细节与经验得失。
+作为一款支持 PC 和主机平台的第三人称射击游戏，[《SYNCED》](https://www.syncedthegame.com/)在项目早期就确定了高规格的音频交付标准，在保证绝大多数玩家使用耳机的听感效果的同时，还需要适配立体声、多声道环绕声以及带有顶置音箱的影院级配置的各种听音环境。音频中间件 Wwise 在 2021 版本中引入了 Object-Based Audio Pipeline（基于对象音频的管线），配合各个厂商如 Dolby 和 Sony 等在终端设备上提供了更多的渲染支持，《SYNCED》音频组也在第一时间跟进，对项目音频结构和工作管线进行了改造，利用新的工具在各类终端和回放环境下实现高规格的音频交付标准。本文将以《SYNCED》项目为例，从 Object-Based Audio（以下简称 OBA）这个核心概念出发，分享一下在资源制作、声音定位、总线结构和音频设备配置等方面的技术内容。
 
 ## What is Object-Based Audio and Why?
 
@@ -34,12 +33,8 @@ nav_exclude: true
 
 ![Object-Based-Audio-Design-and-Mixing](A-Project-Case-of-Object-Based-Audio-Design-and-Mixing/Object-Based-Audio-Design-and-Mixing.png)
 
-上图是针对 OBA 设计和混音的概览，主要是开发流程和用户端设置两个部分，其中开发流程包含了资源制作、声音定位、总线结构和音频设备配置四个环节。
-
-```
-UE 4.25
-Wwise 2021.1.9
-```
+上图是 OBA 设计和混音的总览图，主要包括开发流程和用户端设置两个部分，其中开发流程包含了资源制作、声音定位、总线结构和音频设备配置四个环节。  
+Based on UE 4.25 & Wwise 2021.1.9
 
 ### Asset Production
 
@@ -59,21 +54,39 @@ Wwise 2021.1.9
 
 ### Bus Structure
 
+为了实现同一套总线结构适配各类终端设备，Master Bus 上不会使用任何空间化或双耳化的效果插件，Bus Configuration 将由 Audio Device 设置和输出终端决定，Meter 会实时显示当前输出通道的状态。  
+Master Bus 之下的各类 Sub Bus 在根据声音类型进行拆分构建的同时，还需要考虑开启 3D Audio 下的输出分配情况：
+- Main Mix：绝大多数声音都可以被送到 Main Mix，且当 Audio Device 未开启 3D Audio 时，所有声音都以普通 Channel-Based 的方式输出；当 Audio Device 开启 3D Audio 且终端设备开启额外空间化或双耳化效果时，声音会受到效果渲染后输出。
+- Passthrough Mix：无需空间化的声音可以送到 Passthrough Mix，比如大多数音乐、2D UI 和以 Channel-Based 方式制作的铺底环境声，这样做可以避免此类声音受到终端设备空间化或双耳化渲染引起的劣化效果。
+- Audio Objects：送入该通道的声音将携带必要的 metadata 信息交由终端设备来完成实际的声音渲染，可以提供更好的空间定位感。
+
 ![Bus Structure](A-Project-Case-of-Object-Based-Audio-Design-and-Mixing/Object-Based-Audio-Design-and-Mixing_04.png)
+
+在 Bus 层级实现一些额外的动态混音：
+- State Control：Output Config 和 Mixing Mode 与游戏系统设置中的音频选项挂钩，用于在不同输出设备和混音模式下的声音比例控制。比如在使用耳机输出时，将音乐扩展环绕声混响效果的后置输出静音；在使用 Tactical Mode 时，游戏内语音将会稍显明显，音乐等其他声音在频段上稍作避让。
+- RTPC Control：配合 Wwise Meter 插件使用 RTPC 实现更精细的 Ducking 效果，响度和频段上让出更多空间突显重要声音。
+- Mixing Preset：针对进出 Cutscene 或全屏 UI 等有明显起始阶段性的情况，配置成对的 Mix Event 来控制进出状态时的声音切换与过渡。
 
 ![Bus Mixing Control](A-Project-Case-of-Object-Based-Audio-Design-and-Mixing/Object-Based-Audio-Design-and-Mixing_05.png)
 
 ### Audio Device Config
 
+在 Wwise 端，Master Bus 后的信号将会送入 Audio Device 中根据终端设备的情况做更进一步的处理，可以创建不同的 System Audio Device 来满足不同设备的输出需求，其中可以设置是否启用 3D Audio、是否使用 Audio Object 和空间化/双耳化的通道制式等。表头部分将会显示 Main Mix、Passthrough Mix 和 Audio Object 三类通道的输出情况，以及 Main Mix 的输出制式。同时，使用 Mastering Suite 插件可以对信号在频段、声道响度、多端压缩和限制上做最终的处理。  
+
 ![Audio Device Shareset](A-Project-Case-of-Object-Based-Audio-Design-and-Mixing/Object-Based-Audio-Design-and-Mixing_06.png)
+
+在 UE 端，使用 Make AkOutputSettings 和 Replace Main Output 蓝图节点，可以根据用户音频选项更新信号输出到指定的 Audio Device，同时设置 Panning Rule 和 Channel Config。
 
 ![Audio Output Config](A-Project-Case-of-Object-Based-Audio-Design-and-Mixing/Object-Based-Audio-Design-and-Mixing_07.png)
 
+上述 Wwise 和 UE 两端的配合设置，可以对各个输出设备做出精细的定制化处理。比如 Home Theater 作为高配选项，启用 3D Audio 和 Audio Object，Main Mix 以 7.1.4 制式输出，Channel Config 使用 Ak Parent 由终端决定；而 TV Speakers 选项考虑到硬件局限，则禁用了 3D Audio 和 Audio Object，Channel Config 直接设置成 Ak 2.1，并且使用多段压缩适度减小动态。  
+《SYNCED》项目的 Home Theater 混音在中影基地完成，更多幕后纪录《Xichen's Vlog #052 Game Audio Mixing at Theater》（[YouTube](https://www.youtube.com/watch?v=X2uh5yyrZO8) / [Bilibili](https://www.bilibili.com/video/BV1iu4y1k7wg)）。
+
 ### User-End Setup
 
-![User-End Setup](A-Project-Case-of-Object-Based-Audio-Design-and-Mixing/Object-Based-Audio-Design-and-Mixing_08.png)
+如果要体验完整的 3D/Spatial Audio 效果，在用户端需要完成两部分操作。以 PC 端为例，一是在游戏系统设置中选择支持 OBA 输出的设备选项 Home Theater 或 Pro Headphones，二是在 Windows 系统声音中启用 Spatial Sound 功能，系统原生 Windows Sonic 或者第三方产品 Dolby Access 和 DTS Sound Unbound 等。当系统声音未开启 Spatial Sound 功能时，信号将根据终端声道数以普通 Channel-Based 形式输出。
 
-## Conclusion
+![User-End Setup](A-Project-Case-of-Object-Based-Audio-Design-and-Mixing/Object-Based-Audio-Design-and-Mixing_08.png)
 
 ## For More Information
 
